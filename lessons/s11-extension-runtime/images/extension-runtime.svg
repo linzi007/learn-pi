@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Pi 扩展运行时的事件分发与错误隔离</title>
+  <desc id="desc">inline extension 在装载时登记事件处理器，ExtensionRunner 将生命周期事件和工具调用交给处理器；工具调用可被阻止，普通 handler 的异常则转为诊断。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#334155"/></marker>
+    <style>
+      .title { font: 700 26px -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif; fill: #ffffff; }
+      .label { font: 700 17px -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif; fill: #172033; }
+      .body { font: 500 15px -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif; fill: #475569; }
+      .code { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #334155; }
+    </style>
+  </defs>
+  <rect width="960" height="540" fill="#f8fafc"/>
+  <rect width="960" height="72" fill="#4c1d95"/>
+  <text x="480" y="45" text-anchor="middle" class="title">扩展只登记规则，运行时统一执行和隔离</text>
+
+  <rect x="52" y="150" width="180" height="190" rx="8" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2"/>
+  <text x="142" y="188" text-anchor="middle" class="label">inline extension</text>
+  <text x="142" y="223" text-anchor="middle" class="code">pi.on(...)</text>
+  <text x="142" y="252" text-anchor="middle" class="body">登记 agent_start</text>
+  <text x="142" y="278" text-anchor="middle" class="body">登记 tool_call</text>
+  <text x="142" y="304" text-anchor="middle" class="body">登记 agent_end</text>
+
+  <path d="M232 245 H337" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="345" y="150" width="220" height="190" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="455" y="188" text-anchor="middle" class="label">ExtensionRunner</text>
+  <text x="455" y="223" text-anchor="middle" class="body">创建运行时上下文</text>
+  <text x="455" y="252" text-anchor="middle" class="body">按事件类型分发 handler</text>
+  <text x="455" y="281" text-anchor="middle" class="body">收集非致命诊断</text>
+
+  <path d="M565 205 H655" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M565 285 H655" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <rect x="665" y="125" width="245" height="115" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="787" y="161" text-anchor="middle" class="label">工具调用</text>
+  <text x="787" y="194" text-anchor="middle" class="code">tool_call</text>
+  <text x="787" y="218" text-anchor="middle" class="body">返回 block，阻止危险 bash</text>
+
+  <rect x="665" y="275" width="245" height="115" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="787" y="311" text-anchor="middle" class="label">生命周期事件</text>
+  <text x="787" y="344" text-anchor="middle" class="code">agent_end</text>
+  <text x="787" y="368" text-anchor="middle" class="body">handler 抛错，转为诊断</text>
+
+  <rect x="150" y="425" width="660" height="67" rx="8" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+  <text x="480" y="453" text-anchor="middle" class="label">主规则：扩展声明意图；Runner 决定何时调用，并把可隔离的错误留为诊断。</text>
+  <text x="480" y="478" text-anchor="middle" class="body">工具拦截是控制流结果；普通生命周期 handler 的错误不应击穿整个宿主运行时。</text>
+</svg>
