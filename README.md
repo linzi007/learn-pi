@@ -37,6 +37,7 @@ npm install --ignore-scripts
 | [s02 运行状态](lessons/s02-agent-runtime-state/README.md) | 模型事件怎样归约为界面可读取的运行状态 | 真实模型 |
 | [s03 工具执行管线](lessons/s03-tool-execution-pipeline/README.md) | 工具完成顺序为何不同于历史写入顺序 | 真实模型 |
 | [s04 消息边界](lessons/s04-message-boundary/README.md) | 保存的记录为何不等于模型收到的上下文 | 真实模型 |
+| [s05 消息队列](lessons/s05-message-queues/README.md) | 引导消息和后续消息为何在不同时间进入运行 | 真实模型 |
 | [s06 平稳停止](lessons/s06-graceful-stop/README.md) | 中止或失败后为何仍能得到完整的结束状态 | 真实模型 |
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | 怎样把 Pi Coding Agent 嵌进受控宿主 | 真实模型 |
 | [s08 会话树](lessons/s08-session-tree/README.md) | 追加历史怎样由当前末端投影为模型上下文 | 本地确定性演示 |
@@ -52,7 +53,7 @@ npm run lesson -- s01
 npm run test:lesson -- s01
 ```
 
-s05、s10-s12 仍在后续路线中，依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
+s10-s12 仍在后续路线中，依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
 
 验证整个项目：
 

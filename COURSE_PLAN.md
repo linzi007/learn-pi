@@ -47,7 +47,7 @@ flowchart LR
 | [s02 运行状态](lessons/s02-agent-runtime-state/README.md) | Pi 怎样把模型事件转换成界面可读取的运行状态？ | 真实 Agent 事件时间线与状态快照；离线生命周期测试 | `pi-agent-core` | 已完成 |
 | [s03 工具执行管线](lessons/s03-tool-execution-pipeline/README.md) | 工具的及时完成与稳定历史怎样同时成立？ | 真实工具批次；离线顺序、拦截和停止测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | [s04 消息边界](lessons/s04-message-boundary/README.md) | Agent 保存的消息为什么不等于实际发送给模型的上下文（Context）？ | 真实模型请求前的两层转换；离线消息边界测试 | `pi-agent-core` | 已完成 |
-| s05 消息队列（Message Queues） | 引导消息（steering）与后续消息（follow-up）为什么有不同的取出时机？ | 两类消息队列的注入时间线 | `pi-agent-core` | 计划中 |
+| [s05 消息队列](lessons/s05-message-queues/README.md) | 引导消息（steering）与后续消息（follow-up）为什么有不同的取出时机？ | 真实模型队列注入；离线时序和清理测试 | `pi-agent-core` | 已完成 |
 | [s06 平稳停止](lessons/s06-graceful-stop/README.md) | 中止（abort）或失败（error）后怎样仍得到可保存的结束状态和空闲运行器？ | 真实模型中止路径；离线 abort/error/idle 测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | CLI 背后的 Agent、工具、资源和会话怎样被装配？ | 真实模型的受控 `AgentSession`；离线 SDK 测试 | `pi-coding-agent` | 已完成 |
 | [s08 会话树](lessons/s08-session-tree/README.md) | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 本地创建分支并从当前末端重建模型上下文 | `pi-coding-agent` | 已完成 |
@@ -111,8 +111,8 @@ flowchart LR
 
 - 核心结论：steering 在当前工作过程的 drain point 注入，follow-up 等 Agent 本应停止时再开始。
 - 公开 API：`Agent.steer()`、`Agent.followUp()`、队列状态与清理方法。
-- Demo：首个 delta 后同时排入两种消息，用三次 faux 响应观察顺序。
-- 测试：调用次数、消息顺序、队列最终为空；流式中直接 `prompt()` 被拒绝。
+- `code.ts`：默认真实模型；首个文字增量后同时排入两类消息，显示它们进入运行的先后。
+- `code.test.ts`：验证调用次数、消息顺序、队列清理和流式中直接 `prompt()` 被拒绝。
 - 主图：turn、steering drain point 和 idle/follow-up drain point 时间线。
 
 ### s06 平稳停止（Graceful Stop）
