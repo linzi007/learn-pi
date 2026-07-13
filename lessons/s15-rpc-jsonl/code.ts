@@ -28,6 +28,7 @@ const consoleOutput: LessonOutput = {
 };
 
 export async function runRpcLesson(output: LessonOutput = consoleOutput): Promise<LessonResult> {
+	// 真实模型配置只复制到本次临时目录；RPC 子进程不会读取用户已有的 Pi 状态。
 	const { model: providerModel, apiKey } = createAnthropicCompatibleRuntime();
 	const tempRoot = await mkdtemp(join(tmpdir(), "learn-pi-s15-"));
 	const agentDir = join(tempRoot, "pi-agent");
@@ -42,6 +43,7 @@ export async function runRpcLesson(output: LessonOutput = consoleOutput): Promis
 	let client: RpcClient | undefined;
 
 	try {
+		// 子进程只通过这份 models.json 认识本课 Provider，避免依赖 ~/.pi/agent 的模型注册。
 		await mkdir(agentDir, { recursive: true });
 		await writeFile(
 			join(agentDir, "models.json"),
@@ -74,8 +76,10 @@ export async function runRpcLesson(output: LessonOutput = consoleOutput): Promis
 				2,
 			)}\n`,
 		);
+		// rpc-entry 是包公开的入口；不深度导入内部实现，升级 Pi 时协议边界更稳定。
 		const rpcEntryPath = fileURLToPath(import.meta.resolve("@earendil-works/pi-coding-agent/rpc-entry"));
 		const nodePath = [dirname(process.execPath), process.env.PATH].filter(Boolean).join(delimiter);
+		// RpcClient 封装 JSONL 子进程边界；环境和参数明确关闭本课无关的本地资源加载。
 		client = new RpcClient({
 			cliPath: rpcEntryPath,
 			cwd: tempRoot,
@@ -101,14 +105,20 @@ export async function runRpcLesson(output: LessonOutput = consoleOutput): Promis
 			],
 		});
 
+		// start 先建立子进程和协议握手，后续命令才可安全发出。
 		await client.start();
+		output.writeLine("[步骤 1/5] 启动隔离的 RPC 子进程，并建立标准输入/输出通道。");
 		output.writeLine(`RPC 子进程: 已启动（model=${model}）`);
 
+		// 两个独立命令并发发往同一 JSONL 会话，响应通过 request id 回到各自调用方。
+		output.writeLine("[步骤 2/5] 并发发送两条查询：响应必须按请求编号归还，而非按到达顺序。");
 		const [currentState, availableModels] = await Promise.all([client.getState(), client.getAvailableModels()]);
 		state = currentState;
 		availableModelCount = availableModels.length;
 		output.writeLine(`并发响应: get_state.sessionId=${state.sessionId}, models=${availableModelCount}`);
 
+		// promptAndWait 收集本次请求产生的事件，等 session 空闲后才读取最终 assistant 文本。
+		output.writeLine("[步骤 3/5] 发送问题：接受响应与 Agent 完成事件分开观察。");
 		const events = await client.promptAndWait(PROMPT);
 		eventTypes = events.map((event) => event.type);
 		output.writeLine(`异步事件: ${eventTypes.join(" -> ")}`);
@@ -125,6 +135,8 @@ export async function runRpcLesson(output: LessonOutput = consoleOutput): Promis
 		finalText = await client.getLastAssistantText();
 		output.writeLine(`最终文本: ${finalText ?? "(无文本)"}`);
 
+		// 故意请求不存在的模型，观察 RPC 如何把服务端失败返回给客户端。
+		output.writeLine("[步骤 4/5] 故意请求不存在的模型：观察关联的错误响应。");
 		try {
 			await client.setModel("missing-provider", "missing-model");
 		} catch (error) {
@@ -132,6 +144,7 @@ export async function runRpcLesson(output: LessonOutput = consoleOutput): Promis
 		}
 		output.writeLine(`错误响应: ${missingModelError}`);
 	} finally {
+		// 先结束子进程，再删除其配置目录；无论模型调用结果如何都不留下临时状态。
 		try {
 			if (client) {
 				await client.stop();
@@ -143,6 +156,7 @@ export async function runRpcLesson(output: LessonOutput = consoleOutput): Promis
 			}
 		} finally {
 			await rm(tempRoot, { recursive: true, force: true });
+			output.writeLine("[步骤 5/5] 清理：停止 RPC 子进程并删除本次临时配置。");
 			output.writeLine("清理: RPC 子进程已停止，临时配置目录已删除");
 		}
 	}

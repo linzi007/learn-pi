@@ -6,7 +6,7 @@
 
 ## 推荐前置
 
-建议先完成 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code)，理解 Agent Loop、工具调用、Hooks、Skills、上下文压缩和 System Prompt 等通用机制。
+建议先完成 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code)，理解智能体循环（Agent Loop）、工具调用（Tool Use）、钩子（Hooks）、技能（Skills）、上下文压缩和系统提示（System Prompt）等通用机制。
 
 Learn Pi 不会重新讲一遍这些基础概念，而是继续研究 Pi 的具体实现：统一模型 runtime、Agent 状态机、并行工具管线、消息边界、Session Tree、ResourceLoader、Extension、TUI 和 RPC。
 
@@ -33,14 +33,14 @@ npm install --ignore-scripts
 
 | 课程 | 主题 | `code.ts` 运行方式 |
 | --- | --- | --- |
-| [s01 Model Stream](lessons/s01-model-stream/README.md) | 一次模型请求怎样同时提供实时事件和最终消息 | 真实模型 |
-| [s02 Agent Runtime State](lessons/s02-agent-runtime-state/README.md) | 模型流怎样归约为可订阅的 Agent 生命周期和状态 | 真实模型 |
-| [s03 Tool Execution Pipeline](lessons/s03-tool-execution-pipeline/README.md) | 工具完成顺序为何不同于历史写入顺序 | 真实模型 |
-| [s07 Coding Agent SDK](lessons/s07-coding-agent-sdk/README.md) | 怎样把 Pi Coding Agent 嵌进受控宿主 | 真实模型 |
-| [s08 Session Tree](lessons/s08-session-tree/README.md) | 追加历史怎样由 leaf 投影为当前 Context | 本地确定性演示 |
-| [s13 Runtime Modes](lessons/s13-runtime-modes/README.md) | 同一个 Runtime 怎样路由到四种 adapter | 本地确定性演示 |
-| [s14 TUI Diff Render](lessons/s14-tui-diff-render/README.md) | 状态变化为何不等于整屏重绘 | 本地确定性演示 |
-| [s15 RPC JSONL](lessons/s15-rpc-jsonl/README.md) | 一条 JSONL 输出流怎样关联响应与事件 | 真实模型 |
+| [s01 Pi 运行管理器](lessons/s01-pi-agent-turn/README.md) | Pi 怎样接管手写 Agent Loop，并连续处理终端输入 | 真实模型交互 |
+| [s02 运行状态](lessons/s02-agent-runtime-state/README.md) | 模型事件怎样归约为界面可读取的运行状态 | 真实模型 |
+| [s03 工具执行管线](lessons/s03-tool-execution-pipeline/README.md) | 工具完成顺序为何不同于历史写入顺序 | 真实模型 |
+| [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | 怎样把 Pi Coding Agent 嵌进受控宿主 | 真实模型 |
+| [s08 会话树](lessons/s08-session-tree/README.md) | 追加历史怎样由当前末端投影为模型上下文 | 本地确定性演示 |
+| [s13 运行模式路由](lessons/s13-runtime-modes/README.md) | 参数与终端环境怎样选择正确入口 | 本地确定性演示 |
+| [s14 终端差分渲染](lessons/s14-tui-diff-render/README.md) | 状态变化为何不等于整屏重绘 | 本地确定性演示 |
+| [s15 RPC 逐行 JSON 通道](lessons/s15-rpc-jsonl/README.md) | 一条 JSON 输出流怎样让响应与事件不串线 | 真实模型 |
 
 每课都提供同名的离线 `code.test.ts`。例如：
 

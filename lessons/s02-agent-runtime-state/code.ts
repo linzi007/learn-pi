@@ -1,6 +1,6 @@
 import { pathToFileURL } from "node:url";
-import { Agent, type AgentEvent, type AgentMessage, type AgentState } from "@earendil-works/pi-agent-core";
-import { createAnthropicCompatibleRuntime } from "../../src/core/anthropic-compatible-runtime.ts";
+import type { Agent, AgentEvent, AgentMessage, AgentState } from "@earendil-works/pi-agent-core";
+import { createAnthropicAgent } from "../../src/core/anthropic-agent.ts";
 
 const DEFAULT_PROMPT = "请用两句中文解释：Pi Agent 怎样把模型流变成界面可观察的状态？";
 
@@ -35,6 +35,7 @@ const consoleOutput: LessonOutput = {
 	writeLine: (text) => console.log(text),
 };
 
+// Pi 先更新 Agent.state，再向订阅者发布事件；这里读取同一时刻的状态，不另建一份 reducer。
 function snapshotState(state: AgentState): StateSnapshot {
 	return {
 		isStreaming: state.isStreaming,
@@ -77,17 +78,10 @@ function formatSnapshot(snapshot: StateSnapshot): string {
 
 // 默认入口使用真实 Anthropic-compatible runtime；测试会从外部注入 faux Agent。
 export function createRealAgent(): Agent {
-	const runtime = createAnthropicCompatibleRuntime();
-	return new Agent({
-		initialState: {
-			systemPrompt: "你是 Pi 原理课程中的简洁助手。只用中文回答。",
-			model: runtime.model,
-		},
-		streamFn: (model, context, options) => runtime.models.streamSimple(model, context, options),
-		getApiKey: () => runtime.apiKey,
-	});
+	return createAnthropicAgent("你是 Pi 原理课程中的简洁助手。只用中文回答。");
 }
 
+// 主链路：先订阅 Pi 的事件，再发起 prompt，最后从 Pi 已收束的 state 读取结果。
 // 同一份观察逻辑既用于真实运行，也用于离线测试；它不替 Agent 维护第二份状态。
 export async function observeAgentRun(
 	agent: Agent,
@@ -96,7 +90,10 @@ export async function observeAgentRun(
 ): Promise<RuntimeObservation> {
 	const timeline: TimelineEntry[] = [];
 	let agentEndIsStreaming: boolean | undefined;
+	let announcedAgentStart = false;
+	let announcedTextDelta = false;
 	const unsubscribe = agent.subscribe((event) => {
+		// 将事件与此刻 state 配对，才能看出“流开始/结束”和 transcript 写入的先后关系。
 		const entry = {
 			type: event.type,
 			detail: describeEvent(event),
@@ -104,21 +101,34 @@ export async function observeAgentRun(
 		};
 		timeline.push(entry);
 		if (event.type === "agent_end") agentEndIsStreaming = entry.snapshot.isStreaming;
+		if (event.type === "agent_start" && !announcedAgentStart) {
+			announcedAgentStart = true;
+			output.writeLine("[步骤 2/4] Pi 开始本轮：事件到达前，运行状态已经切换为运行中。");
+		}
+		if (event.type === "message_update" && event.assistantMessageEvent.type === "text_delta" && !announcedTextDelta) {
+			announcedTextDelta = true;
+			output.writeLine("[步骤 3/4] 首个文字增量到达：只更新临时助手消息，不写入完整历史。");
+		}
 		output.writeLine(`${entry.detail.padEnd(34)} | ${formatSnapshot(entry.snapshot)}`);
 	});
 
 	try {
+		// Agent.prompt() 负责驱动模型流和状态转换；本课只观察，不手动修改 state。
+		output.writeLine("[步骤 1/4] 记录发起前的状态快照，并订阅本轮事件。");
 		output.writeLine(`模型: ${agent.state.model.provider}/${agent.state.model.id}`);
 		output.writeLine(`开始前: ${formatSnapshot(snapshotState(agent.state))}`);
 		output.writeLine(`用户提问: ${prompt}`);
 		await agent.prompt(prompt);
 	} finally {
+		// 真实 Agent 可复用，观察者不能遗留订阅。
 		unsubscribe();
 	}
 
+	// prompt 返回后流已结束，最后一条 assistant 消息可从 Pi 维护的 transcript 安全读取。
 	const finalState = snapshotState(agent.state);
 	const finalAssistant = [...agent.state.messages].reverse().find((message) => message.role === "assistant");
 	const finalText = assistantText(finalAssistant);
+	output.writeLine("[步骤 4/4] 本轮结束：读取已经收束的状态和完整回复。");
 	output.writeLine(`结束后: ${formatSnapshot(finalState)}`);
 	output.writeLine(`最终回复: ${finalText || "(无文本)"}`);
 

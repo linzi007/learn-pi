@@ -1,10 +1,21 @@
-# s14：TUI Diff Render — 状态变化不等于整屏重绘
+# s14：终端差分渲染（TUI Diff Render）— 状态变化不等于整屏重绘
 
-[← s13 Runtime Modes](../s13-runtime-modes/README.md) · [返回首页](../../README.md) · [s15 RPC JSONL →](../s15-rpc-jsonl/README.md)
+[← s13 运行模式路由](../s13-runtime-modes/README.md) · [返回首页](../../README.md) · [s15 RPC 的逐行 JSON 通道 →](../s15-rpc-jsonl/README.md)
 
-> **核心结论**：Pi TUI 的 `Component` 每次都生成完整 `string[]`，`TUI` 比较前后两帧后，只把发生变化的行区间写给终端。
+> **核心结论**：终端界面组件（`Component`）每次都生成完整文本帧；Pi 的终端界面系统（`TUI`）比较前后两帧后，只把变化的行写给终端。
 
-推荐前置：已完成 s13，知道 interactive mode 只是 `AgentSessionRuntime` 的一个 adapter。本课不重新讲通用 UI 组件，而是专门解释 Pi 如何把频繁的 Agent 状态更新变成稳定的终端差分写入。
+推荐前置：已完成 s13，知道命令行会选择不同运行入口。本课不重新讲通用 UI 组件，而是专门解释 Pi 如何把频繁的 Agent 状态更新变成稳定的终端差分写入。
+
+---
+
+## 这节只学什么
+
+本课只解决“状态只变了一行时，终端为何不用重写整屏”这个问题。
+
+| 本课会看到 | 本课暂不展开 |
+| --- | --- |
+| 组件生成完整帧、TUI 比较帧、终端只收到变化行 | 键盘输入、焦点、编辑器和完整聊天组件树 |
+| 中文字符按终端列宽截断 | 跨进程 RPC，留给 s15 |
 
 ---
 
@@ -33,7 +44,7 @@ Pi 正在分析代码，终端已经显示：
 
 ![Pi TUI 比较前后两帧并只写入变化行](images/tui-diff-overview.svg)
 
-*图：Component 先投影完整帧；TUI 比较旧帧和新帧，只把需要刷新的行写回 Terminal。*
+*图：组件先投影完整帧；TUI 比较旧帧和新帧，只把需要刷新的行写回终端设备（`Terminal`）。*
 
 Pi 把一次界面更新拆成三个边界：
 
@@ -64,7 +75,7 @@ Pi 把一次界面更新拆成三个边界：
 
 课程入口和本课新增实现都在 [`code.ts`](code.ts)。下面严格按实际执行顺序拆解。
 
-### 第 1 步：用内存 Terminal 替代真实终端
+### 运行准备：用内存终端替代真实终端
 
 ```ts
 export class RecordingTerminal implements Terminal {
@@ -82,11 +93,11 @@ export class RecordingTerminal implements Terminal {
 }
 ```
 
-`Terminal` 是 `pi-tui` 的公开边界。生产环境使用 `ProcessTerminal` 操作 stdin/stdout；本课实现同一个接口，但只把 `write()` 参数保存在数组中。
+这一步只是让结果可检查，不是本课的差分机制。终端设备（`Terminal`）是 `pi-tui` 的公开边界。生产环境使用 `ProcessTerminal` 操作标准输入/输出；本课实现同一个接口，但只把 `write()` 参数保存在数组中。
 
 这样既能运行真实 `TUI` 差分逻辑，又不会开启 raw mode、读取键盘或改动用户终端。
 
-### 第 2 步：Component 将状态投影为完整帧
+### 第 1 步：组件将状态投影为完整帧
 
 ```ts
 export class TaskStatusComponent implements Component {
@@ -114,7 +125,7 @@ export class TaskStatusComponent implements Component {
 
 这里使用 `truncateToWidth()`，而不是 JavaScript 的 `slice()`。终端按列宽排版，通常一个中文字符占两列；字符串长度并不等于终端可见宽度。
 
-### 第 3 步：用 Container 组成组件树
+### 第 2 步：用容器（`Container`）组成组件树
 
 ```ts
 const component = new TaskStatusComponent("分析代码", "等待");
@@ -125,9 +136,9 @@ const tui = new TUI(terminal);
 tui.addChild(layout);
 ```
 
-`Container.render(width)` 会按顺序收集子组件的行。真实 Pi interactive mode 也用多个 Container 组织 header、chat、pending messages、status、editor 和 footer；本课只保留能观察差分机制的两行状态。
+`Container.render(width)` 会按顺序收集子组件的行。真实 Pi 交互界面也用多个容器组织标题、聊天、待处理消息、状态、编辑器和页脚；本课只保留能观察差分机制的两行状态。
 
-### 第 4 步：首帧必须完整写入
+### 第 3 步：首帧必须完整写入
 
 ```ts
 tui.start();
@@ -143,7 +154,7 @@ await settleRender();
 
 本课同时读取公开的 `tui.fullRedraws`。首帧完成后它是 `1`。
 
-### 第 5 步：更新状态并请求下一帧
+### 第 4 步：更新状态并请求下一帧
 
 ```ts
 component.setStatus("完成");
@@ -160,7 +171,7 @@ await settleRender();
 
 变化区间只有 `[1, 1]`，所以第二个同步输出缓冲区只包含新状态行。`fullRedraws` 仍然是 `1`，说明这次没有退回全量重绘。
 
-### 第 6 步：相同帧不产生写入
+### 第 5 步：相同帧不产生写入
 
 ```ts
 const before = terminal.frameWrites.length;
@@ -180,7 +191,7 @@ const added = terminal.frameWrites.length - before;
 
 ## 试一下
 
-本课需要 Node.js `>=22.19.0`，不需要 API Key，也不会读取 `~/.pi`。
+本课需要 Node.js `>=22.19.0`，不需要 API Key，也不会读取用户全局 Pi 配置。
 
 运行课程：
 
@@ -191,13 +202,16 @@ npm run lesson -- s14
 你会看到：
 
 ```text
+[步骤 1/3] 第一次渲染：没有旧帧，终端必须收到完整帧。
 终端宽度: 24 列
 首帧: 任务: 分析代码 | 状态: 等待
 首帧包含全部两行: 是
+[步骤 2/3] 状态只改变一行：终端只收到变化区间。
 更新帧: 任务: 分析代码 | 状态: 完成
 差分写入包含未变化任务行: 否
 差分写入包含新状态行: 是
 全量重绘次数: 1 -> 1
+[步骤 3/3] 再渲染相同状态：没有变化就不写入终端。
 相同帧新增写入: 0
 首帧可见宽度: 14, 10（上限 24）
 ```
@@ -227,7 +241,7 @@ npm run test:lesson -- s14
 
 现在我们知道 interactive mode 如何把频繁状态变化稳定地写到终端，但它仍要求宿主进程直接拥有终端。
 
-s15 RPC JSONL 将跨过进程边界：外部程序通过 stdin/stdout 发送带 `id` 的命令，同时异步接收 Agent 事件。
+s15 RPC 的逐行 JSON 通道将跨过进程边界：外部程序通过标准输入/输出发送带 `id` 的命令，同时异步接收 Agent 事件。
 
 <details>
 <summary>深入 Pi 源码</summary>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">同一个 Pi Agent 连续处理终端输入</title>
+  <desc id="desc">终端读到用户问题后调用 Agent prompt。Pi Agent 管理本轮运行、消息历史与模型调用，向终端发出开始、文本增量和结束事件；下一题复用同一个 Agent。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="560" fill="#f8fafc"/>
+  <rect width="960" height="64" fill="#1d4ed8"/>
+  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">同一个 Pi Agent，连续回答多轮问题</text>
+
+  <rect x="46" y="140" width="210" height="120" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="151" y="172" text-anchor="middle" fill="#1e3a8a" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">终端输入</text>
+  <text x="151" y="204" text-anchor="middle" fill="#334155" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">s01 &gt;&gt; 问题</text>
+  <text x="151" y="232" text-anchor="middle" fill="#64748b" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">步骤 1：读取本次提问</text>
+
+  <path d="M256 200 H334" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="295" y="184" text-anchor="middle" fill="#475569" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">agent.prompt()</text>
+
+  <rect x="346" y="106" width="292" height="198" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+  <text x="492" y="141" text-anchor="middle" fill="#155e75" font-size="19" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Pi Agent</text>
+  <text x="492" y="173" text-anchor="middle" fill="#334155" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">管理这一轮运行</text>
+  <line x1="382" y1="191" x2="602" y2="191" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="492" y="220" text-anchor="middle" fill="#155e75" font-size="14" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">保留已完成的会话历史</text>
+  <text x="492" y="247" text-anchor="middle" fill="#155e75" font-size="14" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">调用模型，产生过程事件</text>
+  <text x="492" y="278" text-anchor="middle" fill="#64748b" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">终端不必手写 Agent Loop</text>
+
+  <path d="M638 166 H712" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="724" y="116" width="190" height="100" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="819" y="150" text-anchor="middle" fill="#9a3412" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">模型服务</text>
+  <text x="819" y="181" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">返回文字和结束信号</text>
+
+  <path d="M724 226 C678 330 614 352 536 352" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="653" y="308" text-anchor="middle" fill="#475569" font-size="12" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Pi 转成 Agent 事件</text>
+
+  <rect x="250" y="364" width="484" height="102" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="492" y="395" text-anchor="middle" fill="#166534" font-size="16" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">终端只订阅并显示</text>
+  <text x="492" y="425" text-anchor="middle" fill="#334155" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">agent_start → text_delta ... → agent_end</text>
+  <text x="492" y="450" text-anchor="middle" fill="#166534" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">步骤 2、3、4：开始、流式输出、完整回复已保存</text>
+
+  <path d="M250 415 H145 V288" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="111" y="337" text-anchor="middle" fill="#475569" font-size="12" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">继续输入下一题</text>
+
+  <text x="480" y="530" text-anchor="middle" fill="#64748b" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">循环仍然存在，但由 Pi Agent 管理；教学程序只负责输入和观察。</text>
+</svg>

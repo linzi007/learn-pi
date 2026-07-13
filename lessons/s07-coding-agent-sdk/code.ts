@@ -39,6 +39,7 @@ const consoleOutput: LessonOutput = {
 };
 
 function createMemoryResourceLoader(): ResourceLoader {
+	// 准备阶段全部使用内存资源：课程不会读取读者的 AGENTS.md、技能或磁盘会话。
 	const extensionsResult = { extensions: [], errors: [], runtime: createExtensionRuntime() };
 	return {
 		getExtensions: () => extensionsResult,
@@ -54,6 +55,7 @@ function createMemoryResourceLoader(): ResourceLoader {
 }
 
 function registerRuntimeModel(runtime: CodingAgentModelRuntime, modelRegistry: ModelRegistry) {
+	// 只通过公开的 ModelRegistry 注册模型，createAgentSession 才能沿正常 SDK 路径解析 Provider。
 	const provider = runtime.models.getProvider(runtime.model.provider);
 	if (!provider) {
 		throw new Error("共享模型 runtime 中没有可注册的 Provider。");
@@ -85,6 +87,7 @@ function registerRuntimeModel(runtime: CodingAgentModelRuntime, modelRegistry: M
 }
 
 export async function createCodingAgentSession(runtime: CodingAgentModelRuntime) {
+	// 这是显式注入边界：认证、模型、资源和会话存储都不从用户全局配置隐式读取。
 	const authStorage = AuthStorage.inMemory();
 	authStorage.setRuntimeApiKey(runtime.model.provider, runtime.apiKey);
 	const modelRegistry = ModelRegistry.inMemory(authStorage);
@@ -93,6 +96,7 @@ export async function createCodingAgentSession(runtime: CodingAgentModelRuntime)
 	const resourceLoader = createMemoryResourceLoader();
 
 	try {
+		// createAgentSession 负责把这些 SDK 依赖组装成真实 AgentSession；课程不重写其运行时。
 		const { session } = await createAgentSession({
 			cwd: COURSE_CWD,
 			agentDir: COURSE_AGENT_DIR,
@@ -112,11 +116,13 @@ export async function createCodingAgentSession(runtime: CodingAgentModelRuntime)
 			dispose() {
 				if (disposed) return;
 				disposed = true;
+				// 先结束 session，再撤销临时 Provider，避免后续调用引用已移除的模型。
 				session.dispose();
 				modelRegistry.unregisterProvider(runtime.model.provider);
 			},
 		};
 	} catch (error) {
+		// 装配失败也必须回滚本课注册的 Provider，不能污染下一次运行。
 		modelRegistry.unregisterProvider(runtime.model.provider);
 		throw error;
 	}
@@ -144,6 +150,7 @@ function reportFailure(
 }
 
 export async function runLesson(options: RunLessonOptions = {}): Promise<LessonResult> {
+	// 默认从 .env 取得真实 runtime；测试可注入等价接口，验证时不接触真实认证信息。
 	const output = options.output ?? consoleOutput;
 	const setExitCodeOnFailure = options.setExitCodeOnFailure ?? true;
 	let sessionRuntime: Awaited<ReturnType<typeof createCodingAgentSession>> | undefined;
@@ -156,16 +163,21 @@ export async function runLesson(options: RunLessonOptions = {}): Promise<LessonR
 		const eventTypes: string[] = [];
 		const prompt = options.prompt ?? (process.env.LEARN_PI_PROMPT?.trim() || DEFAULT_PROMPT);
 
+		output.writeLine("[步骤 1/3] 宿主交出本次运行的模型、认证、资源、会话和工具边界。");
 		output.writeLine(`模型: ${modelName}`);
 		output.writeLine(`会话: ${session.sessionFile ? "磁盘" : "内存（不写入 JSONL）"}`);
 		output.writeLine(`资源: ${MEMORY_AGENTS_PATH}`);
 		output.writeLine(`工具: ${session.getActiveToolNames().join(", ") || "(本课禁用)"}`);
 		output.writeLine(`问题: ${prompt}`);
+		// 订阅只记录 SDK 已发出的事件，不参与 session 的状态或消息维护。
 		const unsubscribe = session.subscribe((event) => eventTypes.push(event.type));
 		try {
+			output.writeLine("[步骤 2/3] 由 AgentSession 发起提问，并等待 Pi 收束本轮运行。");
 			await session.prompt(prompt);
+			// prompt 提交后仍可能在流式处理；waitForIdle 是读取最终 transcript 的同步点。
 			await session.waitForIdle();
 		} finally {
+			// 本轮观察结束即解除订阅，session 的销毁由外层 finally 统一负责。
 			unsubscribe();
 		}
 
@@ -178,6 +190,7 @@ export async function runLesson(options: RunLessonOptions = {}): Promise<LessonR
 			stopReason,
 		};
 
+		output.writeLine("[步骤 3/3] 会话空闲后读取最终事件和回复；随后释放动态注册。");
 		output.writeLine(`事件: ${eventTypes.join(" -> ") || "(无事件)"}`);
 		output.writeLine(`结束原因: ${stopReason ?? "(无 assistant 消息)"}`);
 		output.writeLine(`最终文本: ${finalText || "(无文本)"}`);
@@ -191,6 +204,7 @@ export async function runLesson(options: RunLessonOptions = {}): Promise<LessonR
 			finalText: "",
 		});
 	} finally {
+		// 无论模型成功、失败还是抛错，都释放内存会话与临时模型注册。
 		sessionRuntime?.dispose();
 	}
 }

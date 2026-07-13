@@ -14,7 +14,7 @@ describe("s08 Session Tree", () => {
 			"A [message]",
 			"   `- B [message]",
 			"      |- C [message]",
-			"      `- D [message] <leaf>",
+			"      `- D [message] <当前末端>",
 		]);
 	});
 
@@ -23,7 +23,7 @@ describe("s08 Session Tree", () => {
 
 		expect(result.contextAfterReset).toEqual(["E"]);
 		expect(result.currentBranch).toEqual(["E"]);
-		expect(result.treeAfterReset).toContain("E [message] <leaf>");
+		expect(result.treeAfterReset).toContain("E [message] <当前末端>");
 		expect(result.treeAfterReset).toContain("      `- D [message]");
 	});
 

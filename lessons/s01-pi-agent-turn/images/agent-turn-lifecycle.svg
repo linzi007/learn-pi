@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="470" viewBox="0 0 960 470" role="img" aria-labelledby="title desc">
+  <title id="title">一轮 Pi Agent 交互的四个可观察步骤</title>
+  <desc id="desc">用户输入问题后，Agent 开始一轮运行，终端收到文本增量，prompt 返回时完整消息已进入会话历史。随后可以使用同一个 Agent 提问下一题。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="960" height="470" fill="#f8fafc"/>
+  <rect width="960" height="64" fill="#1d4ed8"/>
+  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">一轮交互，不需要终端手写 Agent Loop</text>
+
+  <line x1="104" y1="226" x2="862" y2="226" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+    <circle cx="126" cy="226" r="24" fill="#2563eb"/>
+    <text x="126" y="232" fill="#ffffff" font-size="15" font-weight="700">1</text>
+    <text x="126" y="160" fill="#1e3a8a" font-size="15" font-weight="700">用户输入</text>
+    <text x="126" y="190" fill="#475569" font-size="13">s01 &gt;&gt; 问题</text>
+    <text x="126" y="281" fill="#64748b" font-size="13">终端读取一行文字</text>
+
+    <circle cx="342" cy="226" r="24" fill="#0891b2"/>
+    <text x="342" y="232" fill="#ffffff" font-size="15" font-weight="700">2</text>
+    <text x="342" y="160" fill="#155e75" font-size="15" font-weight="700">Agent 开始本轮</text>
+    <text x="342" y="190" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">agent_start</text>
+    <text x="342" y="281" fill="#64748b" font-size="13">Pi 接管消息与模型调用</text>
+
+    <circle cx="582" cy="226" r="24" fill="#ea580c"/>
+    <text x="582" y="232" fill="#ffffff" font-size="15" font-weight="700">3</text>
+    <text x="582" y="160" fill="#9a3412" font-size="15" font-weight="700">分段显示回答</text>
+    <text x="582" y="190" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">text_delta ...</text>
+    <text x="582" y="281" fill="#64748b" font-size="13">终端只订阅并显示事件</text>
+
+    <circle cx="810" cy="226" r="24" fill="#16a34a"/>
+    <text x="810" y="232" fill="#ffffff" font-size="15" font-weight="700">4</text>
+    <text x="810" y="160" fill="#166534" font-size="15" font-weight="700">本轮收束</text>
+    <text x="810" y="190" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">agent_end</text>
+    <text x="810" y="281" fill="#64748b" font-size="13">完整回复已进入历史</text>
+  </g>
+
+  <rect x="178" y="348" width="604" height="68" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+  <text x="480" y="378" text-anchor="middle" fill="#155e75" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">下一次输入复用同一个 Agent</text>
+  <text x="480" y="402" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">第一轮完成的 user / assistant 消息由 Pi 保留，终端不需要自己维护数组。</text>
+</svg>
