@@ -48,7 +48,7 @@ flowchart LR
 | [s03 工具执行管线](lessons/s03-tool-execution-pipeline/README.md) | 工具的及时完成与稳定历史怎样同时成立？ | 真实工具批次；离线顺序、拦截和停止测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | [s04 消息边界](lessons/s04-message-boundary/README.md) | Agent 保存的消息为什么不等于实际发送给模型的上下文（Context）？ | 真实模型请求前的两层转换；离线消息边界测试 | `pi-agent-core` | 已完成 |
 | s05 消息队列（Message Queues） | 引导消息（steering）与后续消息（follow-up）为什么有不同的取出时机？ | 两类消息队列的注入时间线 | `pi-agent-core` | 计划中 |
-| s06 平稳停止（Graceful Stop） | 中止（abort）或失败（error）后怎样仍得到可保存的结束状态和空闲运行器？ | 慢速 faux stream 的 abort 收束 | `pi-agent-core`、`pi-ai` | 计划中 |
+| [s06 平稳停止](lessons/s06-graceful-stop/README.md) | 中止（abort）或失败（error）后怎样仍得到可保存的结束状态和空闲运行器？ | 真实模型中止路径；离线 abort/error/idle 测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | CLI 背后的 Agent、工具、资源和会话怎样被装配？ | 真实模型的受控 `AgentSession`；离线 SDK 测试 | `pi-coding-agent` | 已完成 |
 | [s08 会话树](lessons/s08-session-tree/README.md) | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 本地创建分支并从当前末端重建模型上下文 | `pi-coding-agent` | 已完成 |
 | s09 会话压缩（Session Compaction） | Pi 怎样用压缩条目（compaction entry）改变上下文（Context），同时保留原始会话树？ | 切点、摘要和压缩条目 | `pi-agent-core`、`pi-coding-agent` | 计划中 |
@@ -119,8 +119,8 @@ flowchart LR
 
 - 核心结论：abort 不应留下半截运行，而应产生 `stopReason="aborted"` 并恢复 idle state。
 - 公开 API：`Agent.abort()`、`Agent.waitForIdle()`、`Agent.signal`。
-- Demo：慢速 faux stream 在第一个 delta 后中止。
-- 测试：最终状态、`agent_end`、空闲时 abort no-op。
+- `code.ts`：默认真实模型；在第一个文字增量后中止，观察 `agent_end` 与真正 idle 的先后。
+- `code.test.ts`：慢速 faux stream 验证最终状态、`agent_end`、失败收束与空闲时 abort no-op。
 - 主图：正常完成与 abort 收束的两条路径。
 
 ### s07 编码智能体 SDK（Coding Agent SDK）
