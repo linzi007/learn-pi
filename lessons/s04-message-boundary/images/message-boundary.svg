@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title description">
+  <title id="title">Pi 的两层消息边界</title>
+  <desc id="description">Agent 保存完整记录，transformContext 选择本轮记录，convertToLlm 过滤界面提示，模型只收到协议消息。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f5f8b"/>
+    </marker>
+    <style>
+      .title { font: 700 30px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172033; }
+      .subtitle { font: 400 18px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #536273; }
+      .panel-title { font: 700 20px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172033; }
+      .label { font: 600 17px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172033; }
+      .small { font: 400 15px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #415267; }
+      .arrow-label { font: 600 16px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #1f5f8b; }
+      .result { font: 700 18px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #14532d; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <text x="600" y="58" text-anchor="middle" class="title">Pi 的两层消息边界：保存，不等于发送</text>
+  <text x="600" y="90" text-anchor="middle" class="subtitle">本图对应 s04 的一次真实模型请求前，消息经过的两次处理</text>
+
+  <rect x="48" y="144" width="330" height="404" rx="8" fill="#ffffff" stroke="#96a8bb" stroke-width="2"/>
+  <text x="213" y="184" text-anchor="middle" class="panel-title">Agent 保存的完整记录</text>
+  <text x="213" y="212" text-anchor="middle" class="small">界面和后续会话仍可读取</text>
+  <rect x="80" y="246" width="266" height="54" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="213" y="279" text-anchor="middle" class="label">旧用户消息</text>
+  <rect x="80" y="316" width="266" height="54" rx="6" fill="#ede9fe" stroke="#a78bfa"/>
+  <text x="213" y="349" text-anchor="middle" class="label">旧助手回复</text>
+  <rect x="80" y="386" width="266" height="54" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="213" y="419" text-anchor="middle" class="label">界面提示（notice）</text>
+  <rect x="80" y="456" width="266" height="54" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="213" y="489" text-anchor="middle" class="label">本次用户提问</text>
+
+  <line x1="392" y1="348" x2="505" y2="348" stroke="#1f5f8b" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="448" y="314" text-anchor="middle" class="arrow-label">transformContext</text>
+  <text x="448" y="337" text-anchor="middle" class="small">选择本轮记录</text>
+
+  <rect x="520" y="226" width="258" height="246" rx="8" fill="#ffffff" stroke="#96a8bb" stroke-width="2"/>
+  <text x="649" y="266" text-anchor="middle" class="panel-title">本轮候选记录</text>
+  <text x="649" y="294" text-anchor="middle" class="small">仍是 AgentMessage[]</text>
+  <rect x="550" y="326" width="198" height="52" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="649" y="358" text-anchor="middle" class="label">界面提示（notice）</text>
+  <rect x="550" y="396" width="198" height="52" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="649" y="428" text-anchor="middle" class="label">本次用户提问</text>
+
+  <line x1="792" y1="348" x2="905" y2="348" stroke="#1f5f8b" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="848" y="314" text-anchor="middle" class="arrow-label">convertToLlm</text>
+  <text x="848" y="337" text-anchor="middle" class="small">过滤非协议记录</text>
+
+  <rect x="920" y="226" width="232" height="246" rx="8" fill="#ffffff" stroke="#96a8bb" stroke-width="2"/>
+  <text x="1036" y="266" text-anchor="middle" class="panel-title">实际模型上下文</text>
+  <text x="1036" y="294" text-anchor="middle" class="small">Message[]</text>
+  <rect x="950" y="347" width="172" height="54" rx="6" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="1036" y="380" text-anchor="middle" class="label">本次用户提问</text>
+  <text x="1036" y="438" text-anchor="middle" class="small">交给真实模型服务</text>
+
+  <path d="M 1036 488 C 1036 616, 213 616, 213 570" fill="none" stroke="#22a06b" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text x="622" y="645" text-anchor="middle" class="result">模型回复会追加到完整记录；先前历史和界面提示没有被自动删除</text>
+</svg>
