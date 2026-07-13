@@ -46,7 +46,7 @@ flowchart LR
 | [s01 Pi 运行管理器](lessons/s01-pi-agent-turn/README.md) | Pi 怎样接管手写 Agent Loop，并连续处理终端输入？ | 真实交互式 `code.ts` 的四步运行观察；离线连续输入测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | [s02 运行状态](lessons/s02-agent-runtime-state/README.md) | Pi 怎样把模型事件转换成界面可读取的运行状态？ | 真实 Agent 事件时间线与状态快照；离线生命周期测试 | `pi-agent-core` | 已完成 |
 | [s03 工具执行管线](lessons/s03-tool-execution-pipeline/README.md) | 工具的及时完成与稳定历史怎样同时成立？ | 真实工具批次；离线顺序、拦截和停止测试 | `pi-agent-core`、`pi-ai` | 已完成 |
-| s04 消息边界（Message Boundary） | Agent 保存的消息为什么不等于实际发送给模型的上下文（Context）？ | `transformContext` 与 `convertToLlm` 双层过滤 | `pi-agent-core` | 计划中 |
+| [s04 消息边界](lessons/s04-message-boundary/README.md) | Agent 保存的消息为什么不等于实际发送给模型的上下文（Context）？ | 真实模型请求前的两层转换；离线消息边界测试 | `pi-agent-core` | 已完成 |
 | s05 消息队列（Message Queues） | 引导消息（steering）与后续消息（follow-up）为什么有不同的取出时机？ | 两类消息队列的注入时间线 | `pi-agent-core` | 计划中 |
 | s06 平稳停止（Graceful Stop） | 中止（abort）或失败（error）后怎样仍得到可保存的结束状态和空闲运行器？ | 慢速 faux stream 的 abort 收束 | `pi-agent-core`、`pi-ai` | 计划中 |
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | CLI 背后的 Agent、工具、资源和会话怎样被装配？ | 真实模型的受控 `AgentSession`；离线 SDK 测试 | `pi-coding-agent` | 已完成 |
@@ -103,8 +103,8 @@ flowchart LR
 
 - 核心结论：Agent transcript 可以包含 UI 消息和完整历史，Provider 只接收转换后的 LLM Context。
 - 公开 API：`transformContext`、`convertToLlm`、`AgentMessage`。
-- Demo：保留 UI-only notice 和旧消息，但在 Provider 边界裁剪、过滤。
-- 测试：state 保留完整记录，faux response factory 只看到允许发送的消息。
+- `code.ts`：默认真实模型；保留 UI-only notice 和旧消息，在模型请求边界观察裁剪、过滤后的上下文。
+- `code.test.ts`：state 保留完整记录，离线 faux provider 只看到允许发送的消息。
 - 主图：完整 transcript 经过两道过滤进入 Provider 的漏斗。
 
 ### s05 消息队列（Message Queues）
