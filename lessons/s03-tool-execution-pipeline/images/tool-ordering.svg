@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650" role="img" aria-labelledby="title desc">
+  <title id="title">Pi 的并行批次与单批串行对照</title>
+  <desc id="desc">默认第一批只有慢速和快速查询，因此完成事件是快速后慢速，历史结果为慢速后快速。下方是离线对照测试：若串行审计进入同一批，整批改为串行，完成事件和历史结果都保持源顺序。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#46607a"/></marker>
+    <style>
+      .title { font: 700 27px system-ui, sans-serif; fill: #17202a; }
+      .subtitle { font: 400 16px system-ui, sans-serif; fill: #52616f; }
+      .label { font: 700 17px system-ui, sans-serif; fill: #17202a; }
+      .text { font: 400 15px system-ui, sans-serif; fill: #273746; }
+      .small { font: 400 14px system-ui, sans-serif; fill: #405264; }
+      .code { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #1f3b4d; }
+    </style>
+  </defs>
+
+  <rect width="1000" height="650" fill="#f7fafc"/>
+  <text x="40" y="46" class="title">第一批为什么会出现两种顺序？</text>
+  <text x="40" y="73" class="subtitle">默认运行先把“完成可以重排”和“历史必须稳定”放在一个只含 parallel 工具的批次中观察。</text>
+
+  <rect x="40" y="103" width="920" height="221" rx="8" fill="#ffffff" stroke="#4f9a67" stroke-width="2"/>
+  <text x="65" y="135" class="label">默认运行的第一批：全部 parallel</text>
+  <text x="65" y="164" class="code">assistant source: slow_lookup → fast_lookup</text>
+
+  <text x="65" y="204" class="small">同时开始</text>
+  <line x1="205" y1="199" x2="578" y2="199" stroke="#3979aa" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="215" y="189" class="code">slow_lookup</text>
+  <text x="504" y="189" class="small">30 ms</text>
+  <line x1="205" y1="247" x2="381" y2="247" stroke="#4f9a67" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="215" y="237" class="code">fast_lookup</text>
+  <text x="325" y="237" class="small">1 ms</text>
+
+  <rect x="625" y="177" width="145" height="100" rx="8" fill="#e6f4ea" stroke="#4f9a67" stroke-width="2"/>
+  <text x="642" y="207" class="label">完成事件</text>
+  <text x="642" y="235" class="code">fast → slow</text>
+  <text x="642" y="260" class="small">给 UI</text>
+
+  <rect x="800" y="177" width="130" height="100" rx="8" fill="#eef5fb" stroke="#3979aa" stroke-width="2"/>
+  <text x="817" y="207" class="label">历史写入</text>
+  <text x="817" y="235" class="code">slow → fast</text>
+  <text x="817" y="260" class="small">给模型</text>
+
+  <rect x="40" y="360" width="920" height="234" rx="8" fill="#ffffff" stroke="#8268a8" stroke-width="2"/>
+  <text x="65" y="393" class="label">离线对照测试（非默认运行）：把 serial_audit 混进同一批</text>
+  <text x="65" y="422" class="code">assistant source: slow_lookup → fast_lookup → serial_audit</text>
+
+  <rect x="65" y="456" width="228" height="92" rx="8" fill="#f2ecfb" stroke="#8268a8" stroke-width="2"/>
+  <text x="84" y="486" class="label">批次选择</text>
+  <text x="84" y="514" class="code">发现 sequential</text>
+  <text x="84" y="537" class="small">不能并行启动查询</text>
+
+  <line x1="293" y1="502" x2="355" y2="502" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="372" y1="502" x2="498" y2="502" stroke="#8268a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="515" y1="502" x2="641" y2="502" stroke="#8268a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="658" y1="502" x2="720" y2="502" stroke="#8268a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="375" y="482" class="code">slow</text>
+  <text x="520" y="482" class="code">fast</text>
+  <text x="662" y="482" class="code">audit</text>
+
+  <rect x="750" y="456" width="180" height="92" rx="8" fill="#fff6d8" stroke="#c99824" stroke-width="2"/>
+  <text x="769" y="486" class="label">event = history</text>
+  <text x="769" y="516" class="text">slow → fast → audit</text>
+  <text x="769" y="537" class="small">都保持 source order</text>
+
+  <text x="65" y="574" class="small">这个对照只验证“同批出现 sequential 会怎样”；默认 prompt 将审计留在第二批，保证第一批能展示 fast → slow 的完成顺序。</text>
+</svg>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">s08：Pi Session Tree 的 append log、leaf 与 Context</title>
+  <desc id="desc">按时间追加的 A、B、C、D entry 通过 parentId 组成树。leaf 指向 D 时，Context 是 A、B、D，C 保留但不进入当前 Context。resetLeaf 后 E 成为新的 root。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0,0 L10,5.5 L0,11 Z" fill="#4c6270"/>
+    </marker>
+    <style>
+      .title { font: 700 30px system-ui, sans-serif; fill: #19303b; }
+      .label { font: 700 18px system-ui, sans-serif; fill: #19303b; }
+      .body { font: 16px system-ui, sans-serif; fill: #34505d; }
+      .small { font: 14px system-ui, sans-serif; fill: #506b77; }
+      .code { font: 600 16px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #19303b; }
+      .line { stroke: #4c6270; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .tree { stroke: #547583; stroke-width: 2.5; fill: none; }
+      .old { stroke: #89969b; stroke-width: 2.5; stroke-dasharray: 7 6; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="860" fill="#f7faf9"/>
+  <text x="54" y="58" class="title">s08：同一份 append-only entry log，树与 leaf 一起决定当前 Context</text>
+  <text x="54" y="90" class="body">绿色表示保存的 entry，橙色表示当前 leaf，灰色虚线表示仍被保留但不进入当前 Context 的旧分支。</text>
+
+  <rect x="54" y="130" width="390" height="564" rx="10" fill="#e9f6ef" stroke="#57a174" stroke-width="2"/>
+  <text x="80" y="170" class="label">1. 按发生顺序追加 entry</text>
+  <text x="80" y="197" class="small">每条记录保存 id 与 parentId</text>
+
+  <rect x="82" y="222" width="334" height="74" rx="7" fill="#ffffff" stroke="#83bd9b" stroke-width="1.5"/>
+  <text x="102" y="251" class="code">A  parentId: null</text>
+  <text x="102" y="276" class="small">用户开始问题</text>
+  <path d="M249 297 V324" class="line"/>
+  <rect x="82" y="326" width="334" height="74" rx="7" fill="#ffffff" stroke="#83bd9b" stroke-width="1.5"/>
+  <text x="102" y="355" class="code">B  parentId: A</text>
+  <text x="102" y="380" class="small">助手回答</text>
+  <path d="M249 401 V428" class="line"/>
+  <rect x="82" y="430" width="334" height="74" rx="7" fill="#ffffff" stroke="#91a4a9" stroke-width="1.5"/>
+  <text x="102" y="459" class="code">C  parentId: B</text>
+  <text x="102" y="484" class="small">旧方向继续</text>
+  <path d="M249 505 V532" class="line"/>
+  <rect x="82" y="534" width="334" height="74" rx="7" fill="#ffffff" stroke="#d88a3c" stroke-width="2"/>
+  <text x="102" y="563" class="code">D  parentId: B</text>
+  <text x="102" y="588" class="small">branch(B) 后的新方向，当前 leaf</text>
+  <text x="82" y="652" class="body">D 追加时不会覆盖 C。</text>
+  <text x="82" y="678" class="body">append log 永远保留 A、B、C、D。</text>
+
+  <path d="M445 412 H530" class="line"/>
+
+  <rect x="534" y="180" width="412" height="430" rx="10" fill="#eaf2fb" stroke="#608fc7" stroke-width="2"/>
+  <text x="560" y="220" class="label">2. getTree() 组装 parent-child 关系</text>
+  <text x="560" y="247" class="small">B 有两个 child，旧分支与当前分支并存</text>
+
+  <rect x="590" y="282" width="110" height="54" rx="7" fill="#ffffff" stroke="#8bb0da" stroke-width="1.5"/>
+  <text x="635" y="316" class="code">A</text>
+  <path d="M645 336 V365" class="tree"/>
+  <path d="M645 365 H730" class="tree"/>
+  <rect x="730" y="338" width="110" height="54" rx="7" fill="#ffffff" stroke="#8bb0da" stroke-width="1.5"/>
+  <text x="775" y="372" class="code">B</text>
+  <path d="M840 365 H872 V324 H898" class="old"/>
+  <path d="M872 365 V447 H898" class="tree"/>
+  <rect x="898" y="297" width="76" height="54" rx="7" fill="#ffffff" stroke="#9ba7ac" stroke-width="1.5"/>
+  <text x="927" y="331" class="code">C</text>
+  <rect x="898" y="420" width="76" height="54" rx="7" fill="#fff0df" stroke="#d88a3c" stroke-width="2"/>
+  <text x="927" y="454" class="code">D</text>
+  <text x="986" y="451" class="small">leaf</text>
+  <text x="560" y="537" class="body">tree 展示全部历史，不等于当前模型 Context。</text>
+  <text x="560" y="564" class="body">灰色 C 仍能通过指定 leaf 被重建。</text>
+
+  <path d="M947 412 H1035" class="line"/>
+
+  <rect x="1038" y="180" width="347" height="430" rx="10" fill="#fff0df" stroke="#d88a3c" stroke-width="2"/>
+  <text x="1064" y="220" class="label">3. leaf 投影为 Context</text>
+  <text x="1064" y="247" class="small">沿 parentId 向 root 回溯，再反转顺序</text>
+  <rect x="1064" y="288" width="294" height="75" rx="7" fill="#ffffff" stroke="#e5ad71" stroke-width="1.5"/>
+  <text x="1085" y="319" class="code">leaf = D</text>
+  <text x="1085" y="344" class="small">当前会话位置</text>
+  <path d="M1211 364 V396" class="line"/>
+  <rect x="1064" y="399" width="294" height="78" rx="7" fill="#ffffff" stroke="#e5ad71" stroke-width="1.5"/>
+  <text x="1085" y="430" class="code">buildSessionContext()</text>
+  <text x="1085" y="455" class="small">只走 D -> B -> A 这条 parent chain</text>
+  <path d="M1211 478 V510" class="line"/>
+  <rect x="1064" y="513" width="294" height="58" rx="7" fill="#ffffff" stroke="#e5ad71" stroke-width="1.5"/>
+  <text x="1115" y="549" class="code">A -> B -> D</text>
+
+  <rect x="214" y="735" width="1012" height="78" rx="10" fill="#f3eef9" stroke="#9674bd" stroke-width="2"/>
+  <text x="243" y="766" class="label">resetLeaf() 只把 leaf 设为 null</text>
+  <text x="243" y="790" class="body">下一次 append E 的 parentId 为 null，E 成为第二个 root；旧树 A -> B -> {C, D} 不会被清空。</text>
+  <path d="M945 610 V732" class="line"/>
+</svg>

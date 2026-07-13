@@ -1,71 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
-  <title id="title">一次 Pi 模型调用发生了什么</title>
-  <desc id="desc">用户消息和模型信息进入 Models，Models 根据 provider 找到 faux provider，返回同一个事件流。事件流既能实时消费增量，也能取得最终消息。</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
+  <title id="title">一次 Pi 模型请求的两种读取结果</title>
+  <desc id="desc">streamSimple 只发起一次模型请求。Provider 将事件推入 AssistantMessageEventStream；for await 实时读取 text_delta，终止的 done message 同时让 result 返回完整 AssistantMessage。</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0 0 L10 5 L0 10 Z" fill="#475569"/>
     </marker>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
-    </filter>
   </defs>
 
-  <rect width="960" height="600" rx="8" fill="#f8fafc"/>
-  <path d="M8 0 H952 Q960 0 960 8 V64 H0 V8 Q0 0 8 0 Z" fill="#1d4ed8"/>
-  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">一次 Pi 模型调用发生了什么</text>
+  <rect width="960" height="560" fill="#f8fafc"/>
+  <rect width="960" height="64" fill="#1d4ed8"/>
+  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">一次请求，不必自己拼两份结果</text>
 
-  <rect x="36" y="132" width="154" height="96" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <text x="113" y="162" text-anchor="middle" fill="#1e3a8a" font-size="16" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">用户消息</text>
-  <text x="113" y="196" text-anchor="middle" fill="#334155" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">“模型响应是</text>
-  <text x="113" y="216" text-anchor="middle" fill="#334155" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">一次性返回的吗？”</text>
+  <rect x="54" y="90" width="240" height="92" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="174" y="122" text-anchor="middle" fill="#1e3a8a" font-size="17" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">streamSimple(...)</text>
+  <text x="174" y="151" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">用户消息 + 模型配置</text>
+  <text x="174" y="172" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">只发起一次网络请求</text>
 
-  <path d="M190 180 H232" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M294 136 H370" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
 
-  <rect x="244" y="94" width="220" height="120" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <text x="354" y="124" text-anchor="middle" fill="#1e3a8a" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Context</text>
-  <line x1="264" y1="140" x2="444" y2="140" stroke="#dbeafe" stroke-width="2"/>
-  <text x="266" y="164" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">systemPrompt</text>
-  <text x="266" y="188" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">messages[]</text>
+  <rect x="382" y="90" width="196" height="92" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="480" y="125" text-anchor="middle" fill="#9a3412" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Provider</text>
+  <text x="480" y="151" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">接收模型响应</text>
+  <text x="480" y="172" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">持续推入标准事件</text>
 
-  <rect x="244" y="242" width="220" height="96" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
-  <text x="354" y="272" text-anchor="middle" fill="#5b21b6" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Model</text>
-  <text x="266" y="300" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">id: learn-pi-s01</text>
-  <text x="266" y="322" fill="#475569" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">provider: learn-pi-s01</text>
+  <path d="M578 136 H654" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
 
-  <path d="M464 154 H512" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
-  <path d="M464 290 H488 Q512 290 512 266 V230" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="666" y="90" width="240" height="92" rx="6" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
+  <text x="786" y="124" text-anchor="middle" fill="#155e75" font-size="16" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">EventStream</text>
+  <text x="786" y="151" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">一列事件 + 一个最终 Promise</text>
+  <text x="786" y="172" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">不是第二次模型调用</text>
 
-  <rect x="524" y="120" width="210" height="178" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
-  <text x="629" y="151" text-anchor="middle" fill="#1e3a8a" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Models</text>
-  <text x="629" y="176" text-anchor="middle" fill="#334155" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">streamSimple(model, context)</text>
-  <rect x="548" y="197" width="162" height="72" rx="6" fill="#ffffff" stroke="#93c5fd"/>
-  <text x="629" y="221" text-anchor="middle" fill="#334155" font-size="13" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Provider 注册表</text>
-  <text x="629" y="246" text-anchor="middle" fill="#475569" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">learn-pi-s01</text>
-  <text x="629" y="262" text-anchor="middle" fill="#64748b" font-size="12" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">按 model.provider 查找</text>
+  <rect x="103" y="230" width="754" height="95" rx="6" fill="#ffffff" stroke="#0f766e" stroke-width="2"/>
+  <text x="480" y="260" text-anchor="middle" fill="#115e59" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">Provider 推入的一条事件序列</text>
+  <text x="480" y="297" text-anchor="middle" fill="#334155" font-size="15" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">start → text_start → text_delta → text_delta → text_end → done(message)</text>
 
-  <path d="M734 209 H778" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M321 325 V388 H225" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M639 325 V388 H735" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
 
-  <rect x="790" y="148" width="140" height="122" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
-  <text x="860" y="178" text-anchor="middle" fill="#9a3412" font-size="16" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">fauxProvider</text>
-  <text x="860" y="207" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">读取预设响应</text>
-  <text x="860" y="234" text-anchor="middle" fill="#c2410c" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">无需 API Key</text>
-  <text x="860" y="254" text-anchor="middle" fill="#64748b" font-size="12" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">不会访问网络</text>
+  <rect x="52" y="388" width="346" height="122" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="225" y="420" text-anchor="middle" fill="#1e3a8a" font-size="16" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">for await (const event of stream)</text>
+  <text x="225" y="451" text-anchor="middle" fill="#334155" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">按到达顺序读取每个事件</text>
+  <text x="225" y="480" text-anchor="middle" fill="#1e3a8a" font-size="14" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">读到 text_delta 就立刻更新 UI</text>
 
-  <path d="M860 270 V358 H682" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="562" y="388" width="346" height="122" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="735" y="420" text-anchor="middle" fill="#166534" font-size="16" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">await stream.result()</text>
+  <text x="735" y="451" text-anchor="middle" fill="#334155" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">done(message) 到达时兑现 Promise</text>
+  <text x="735" y="480" text-anchor="middle" fill="#166534" font-size="14" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">得到完整 AssistantMessage，用于保存</text>
 
-  <rect x="250" y="346" width="446" height="108" rx="8" fill="#ffffff" stroke="#0f766e" stroke-width="2" filter="url(#shadow)"/>
-  <text x="473" y="378" text-anchor="middle" fill="#115e59" font-size="17" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">AssistantMessageEventStream</text>
-  <text x="473" y="407" text-anchor="middle" fill="#334155" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">start → text_start → text_delta... → text_end → done</text>
-  <text x="473" y="434" text-anchor="middle" fill="#64748b" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">下面两种方式观察的是同一个请求、同一个 Stream</text>
-
-  <path d="M392 454 V486 H288" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
-  <path d="M554 454 V486 H660" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
-
-  <rect x="110" y="498" width="296" height="72" rx="8" fill="#ecfeff" stroke="#0891b2" stroke-width="2"/>
-  <text x="258" y="527" text-anchor="middle" fill="#155e75" font-size="15" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">for await...of</text>
-  <text x="258" y="551" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">边接收 text_delta，边更新终端或 UI</text>
-
-  <rect x="548" y="498" width="296" height="72" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
-  <text x="696" y="527" text-anchor="middle" fill="#166534" font-size="15" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">stream.result()</text>
-  <text x="696" y="551" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">结束后取得完整 AssistantMessage</text>
+  <text x="480" y="542" text-anchor="middle" fill="#64748b" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">事件回答“现在显示什么”；终止消息回答“最后保存什么”。</text>
 </svg>

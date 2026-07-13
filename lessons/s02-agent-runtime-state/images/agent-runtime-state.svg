@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="760" viewBox="0 0 1320 760" role="img" aria-labelledby="title desc">
+  <title id="title">Pi Agent 将模型事件归约为界面状态</title>
+  <desc id="desc">用户通过 agent.prompt 发起请求，Anthropic-compatible model 的流式事件回到 Agent reducer，先更新 AgentState 再通知订阅者，最后在 listener 结束后变为 idle。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#46607a"/></marker>
+    <style>
+      .title { font: 700 28px system-ui, sans-serif; fill: #17202a; }
+      .subtitle { font: 400 16px system-ui, sans-serif; fill: #52616f; }
+      .label { font: 700 16px system-ui, sans-serif; fill: #17202a; }
+      .text { font: 400 14px system-ui, sans-serif; fill: #2c3e50; }
+      .small { font: 400 13px system-ui, sans-serif; fill: #405264; }
+      .code { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #1f3b4d; }
+    </style>
+  </defs>
+  <rect width="1320" height="760" fill="#f7fafc"/>
+  <text x="48" y="50" class="title">一次 prompt：模型事件先进入 Agent reducer，再成为界面状态</text>
+  <text x="48" y="78" class="subtitle">listener 只读取已经归约的 AgentState，不需要自己拼 loading、partial message 或 transcript。</text>
+
+  <rect x="48" y="126" width="218" height="112" rx="8" fill="#e6f4ea" stroke="#4f9a67" stroke-width="2"/>
+  <text x="70" y="160" class="label">用户与界面</text>
+  <text x="70" y="190" class="code">agent.prompt(question)</text>
+  <text x="70" y="216" class="small">发送按钮进入 loading</text>
+  <line x1="266" y1="182" x2="342" y2="182" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="344" y="112" width="304" height="148" rx="8" fill="#eef5fb" stroke="#3979aa" stroke-width="2"/>
+  <text x="368" y="146" class="label">真实 runtime + Agent</text>
+  <text x="368" y="177" class="code">createAnthropicCompatibleRuntime()</text>
+  <text x="368" y="202" class="code">new Agent({ model, streamFn })</text>
+  <text x="368" y="231" class="small">开始时 isStreaming = true</text>
+  <line x1="648" y1="182" x2="724" y2="182" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="726" y="112" width="246" height="148" rx="8" fill="#fff6d8" stroke="#c99824" stroke-width="2"/>
+  <text x="748" y="146" class="label">Model Stream</text>
+  <text x="748" y="177" class="code">start / text_delta / done</text>
+  <text x="748" y="202" class="small">真实 Provider 的增量事件</text>
+  <text x="748" y="231" class="small">由 streamFn 返回</text>
+
+  <path d="M850 260 L850 290 L648 290 L648 334" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="670" y="281" class="small">包装为 AgentEvent</text>
+
+  <rect x="344" y="334" width="304" height="196" rx="8" fill="#f2ecfb" stroke="#8268a8" stroke-width="2"/>
+  <text x="368" y="368" class="label">Agent.processEvents()</text>
+  <text x="368" y="400" class="code">message_start(user)</text>
+  <text x="368" y="426" class="code">message_update(text_delta) × N</text>
+  <text x="368" y="452" class="code">message_end(assistant)</text>
+  <text x="368" y="487" class="small">先归约 state，再 await listener</text>
+  <text x="368" y="510" class="small">agent / turn / message 三层事件</text>
+  <line x1="648" y1="432" x2="724" y2="432" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="726" y="310" width="538" height="264" rx="8" fill="#ffffff" stroke="#8aa3b8" stroke-width="2"/>
+  <text x="752" y="346" class="label">同一个时刻可读取的 AgentState</text>
+  <line x1="752" y1="361" x2="1236" y2="361" stroke="#d6e0e8"/>
+  <text x="752" y="402" class="label">用户刚发送后</text>
+  <text x="752" y="428" class="code">isStreaming = true</text>
+  <text x="752" y="450" class="code">streamingMessage = user</text>
+  <text x="752" y="472" class="code">messages = []</text>
+  <text x="1005" y="402" class="label">assistant 生成中</text>
+  <text x="1005" y="428" class="code">streamingMessage = partial assistant</text>
+  <text x="1005" y="450" class="code">messages = [user]</text>
+  <text x="752" y="514" class="label">assistant 完整结束后</text>
+  <text x="752" y="540" class="code">streamingMessage = undefined</text>
+  <text x="752" y="562" class="code">messages = [user, assistant]</text>
+
+  <line x1="496" y1="530" x2="496" y2="616" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="240" y="618" width="816" height="92" rx="8" fill="#e6f4ea" stroke="#4f9a67" stroke-width="2"/>
+  <text x="266" y="650" class="label">listener 收到 agent_end 后：仍等待 listener settlement</text>
+  <text x="266" y="677" class="small">所有 listener 完成后，finishRun() 清空 streamingMessage，将 isStreaming 设为 false；界面才真正 idle。</text>
+</svg>

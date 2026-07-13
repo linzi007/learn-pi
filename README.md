@@ -1,6 +1,6 @@
 # Learn Pi
 
-通过中文文档和可运行 Demo，逐步理解 [Pi Agent Harness](https://github.com/earendil-works/pi) 的核心原理。
+通过中文文档和可运行 `code.ts`，逐步理解 [Pi Agent Harness](https://github.com/earendil-works/pi) 的核心原理。
 
 > 本项目是非官方学习仓库，不是 Pi 的 fork、替代实现或官方文档镜像。
 
@@ -17,8 +17,8 @@ Pi 同时包含多模型 API、Agent Loop、工具调用、会话、扩展系统
 每课遵守三个原则：
 
 1. 结论来自锁定版本的真实源码
-2. Demo 默认离线运行，不需要 API Key
-3. 后续课程通过 `import` 复用公共模块，不复制前课实现
+2. 面向读者的 `code.ts` 只保留本课真实执行链；涉及模型调用时默认使用真实模型
+3. 测试离线、可重复；后续课程通过 `import` 复用公共模块，不复制前课实现
 
 ## 环境要求
 
@@ -29,24 +29,27 @@ Pi 同时包含多模型 API、Agent Loop、工具调用、会话、扩展系统
 npm install --ignore-scripts
 ```
 
-## 课程
+## 已发布课程
 
-| 课程 | 主题 | 状态 |
+| 课程 | 主题 | `code.ts` 运行方式 |
 | --- | --- | --- |
-| [s01](lessons/s01-model-stream/README.md) | Provider、Model、Context 与流式事件 | 已完成 |
-| s02 | Pi Agent Runtime 与状态事件 | 计划中 |
+| [s01 Model Stream](lessons/s01-model-stream/README.md) | 一次模型请求怎样同时提供实时事件和最终消息 | 真实模型 |
+| [s02 Agent Runtime State](lessons/s02-agent-runtime-state/README.md) | 模型流怎样归约为可订阅的 Agent 生命周期和状态 | 真实模型 |
+| [s03 Tool Execution Pipeline](lessons/s03-tool-execution-pipeline/README.md) | 工具完成顺序为何不同于历史写入顺序 | 真实模型 |
+| [s07 Coding Agent SDK](lessons/s07-coding-agent-sdk/README.md) | 怎样把 Pi Coding Agent 嵌进受控宿主 | 真实模型 |
+| [s08 Session Tree](lessons/s08-session-tree/README.md) | 追加历史怎样由 leaf 投影为当前 Context | 本地确定性演示 |
+| [s13 Runtime Modes](lessons/s13-runtime-modes/README.md) | 同一个 Runtime 怎样路由到四种 adapter | 本地确定性演示 |
+| [s14 TUI Diff Render](lessons/s14-tui-diff-render/README.md) | 状态变化为何不等于整屏重绘 | 本地确定性演示 |
+| [s15 RPC JSONL](lessons/s15-rpc-jsonl/README.md) | 一条 JSONL 输出流怎样关联响应与事件 | 真实模型 |
 
-运行第一课：
+每课都提供同名的离线 `code.test.ts`。例如：
 
 ```bash
 npm run lesson -- s01
-```
-
-验证第一课：
-
-```bash
 npm run test:lesson -- s01
 ```
+
+s04-s06、s09-s12 仍在后续路线中，依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
 
 验证整个项目：
 
@@ -54,11 +57,22 @@ npm run test:lesson -- s01
 npm run verify
 ```
 
+## 模型配置
+
+标为“真实模型”的课程默认调用 Anthropic-compatible 模型；离线 faux provider 只存在于测试中，保证验证不消耗 API 费用。推荐先创建项目自己的配置：
+
+```bash
+cp .env.example .env
+# 编辑 .env，填写 ANTHROPIC_API_KEY；MODEL_ID 和 ANTHROPIC_BASE_URL 按需调整
+```
+
+本机也可直接复用同级 `learn-claude-code/.env`。运行器依次查找 `LEARN_PI_ENV_FILE`、项目根目录 `.env`、同级 `../learn-claude-code/.env`。配置通常使用 `ANTHROPIC_API_KEY`，也支持 `ANTHROPIC_OAUTH_TOKEN`；`MODEL_ID` 默认是 `claude-haiku-4-5`，`ANTHROPIC_BASE_URL` 可选。仓库不会提交任何 `.env` 内容，完整模板见 [.env.example](.env.example)。
+
 ## 目录结构
 
 ```text
 lessons/
-  sNN-topic/  课程文档、教学图片、可运行 Demo 和测试
+  sNN-topic/  课程文档、教学图片、可运行 code.ts 和测试
 src/          出现第二个真实调用者后再提取的共享模块
 scripts/      统一运行与结构检查脚本
 ```

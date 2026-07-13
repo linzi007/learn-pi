@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
-  <title id="title">同一个 Stream 的两种观察方式</title>
-  <desc id="desc">正常事件沿时间线依次产生，for await 实时消费每个事件，stream.result 在结束后返回完整消息。错误也通过同一事件协议结束。</desc>
+  <title id="title">done 同时结束迭代并兑现最终消息</title>
+  <desc id="desc">正常事件沿时间线依次产生，for await 实时消费每个事件。带完整消息的 done 事件既结束事件流，又让 stream.result 返回最终消息；错误也遵循同一终止协议。</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0 0 L10 5 L0 10 Z" fill="#475569"/>
@@ -9,7 +9,7 @@
 
   <rect width="960" height="520" rx="8" fill="#f8fafc"/>
   <path d="M8 0 H952 Q960 0 960 8 V64 H0 V8 Q0 0 8 0 Z" fill="#1d4ed8"/>
-  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">同一个 Stream 的两种观察方式</text>
+  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">done 同时结束迭代并兑现最终消息</text>
 
   <rect x="54" y="90" width="852" height="48" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
   <text x="480" y="120" text-anchor="middle" fill="#1e3a8a" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">for await...of 从左到右实时接收事件，每个 text_delta 到达时就能立刻显示</text>
@@ -45,8 +45,8 @@
     <text x="746" y="254" fill="#64748b" font-size="12">文本块结束</text>
 
     <circle cx="852" cy="218" r="14" fill="#16a34a"/>
-    <text x="852" y="178" fill="#166534" font-size="13" font-weight="700">done</text>
-    <text x="852" y="254" fill="#64748b" font-size="12">成功结束</text>
+    <text x="852" y="178" fill="#166534" font-size="13" font-weight="700">done(message)</text>
+    <text x="852" y="254" fill="#64748b" font-size="12">成功并带完整消息</text>
   </g>
 
   <path d="M852 280 V326 H680" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>

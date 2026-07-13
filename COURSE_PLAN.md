@@ -43,29 +43,29 @@ flowchart LR
 
 | 课程 | 核心问题 | 可运行交付物 | 主要上游包 | 状态 |
 | --- | --- | --- | --- | --- |
-| [s01 Model Stream](lessons/s01-model-stream/README.md) | 同一次模型调用怎样同时提供实时事件和最终消息？ | 三段 `text_delta` 与完整 `AssistantMessage` | `pi-ai` | 已完成 |
-| s02 Agent Runtime State | Pi 怎样把模型流转换成 AgentEvent、AgentState 和严格生命周期？ | 离线 Agent 事件时间线与 state 快照 | `pi-agent-core` | 计划中 |
-| s03 Tool Execution Pipeline | Pi 的 typed validation、hooks、并行执行和 terminate 怎样组成工具管线？ | 多工具批次的执行顺序与拦截结果 | `pi-agent-core`、`pi-ai` | 计划中 |
+| [s01 Model Stream](lessons/s01-model-stream/README.md) | 同一次模型调用怎样同时提供实时事件和最终消息？ | 真实 `code.ts` 的 delta 与最终消息；离线 Stream 测试 | `pi-ai` | 已完成 |
+| [s02 Agent Runtime State](lessons/s02-agent-runtime-state/README.md) | Pi 怎样把模型流转换成 AgentEvent、AgentState 和严格生命周期？ | 真实 Agent 事件时间线与 state 快照；离线生命周期测试 | `pi-agent-core` | 已完成 |
+| [s03 Tool Execution Pipeline](lessons/s03-tool-execution-pipeline/README.md) | Pi 的 typed validation、hooks、并行执行和 terminate 怎样组成工具管线？ | 真实工具批次；离线顺序、拦截和 terminate 测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | s04 Message Boundary | Agent 保存的消息为什么不等于实际发送给模型的 Context？ | `transformContext` 与 `convertToLlm` 双层过滤 | `pi-agent-core` | 计划中 |
 | s05 Message Queues | steering 与 follow-up 为什么有不同的 drain point？ | 两类消息队列的注入时间线 | `pi-agent-core` | 计划中 |
 | s06 Graceful Stop | abort 或 error 后怎样仍得到可保存的结束状态和 idle runtime？ | 慢速 faux stream 的 abort 收束 | `pi-agent-core`、`pi-ai` | 计划中 |
-| s07 Coding Agent SDK | CLI 背后的 Agent、工具、资源和 Session 怎样被装配？ | 完全 in-memory 的 `AgentSession` | `pi-coding-agent` | 计划中 |
-| s08 Session Tree | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 创建分支并从 leaf 重建 Context | `pi-coding-agent` | 计划中 |
+| [s07 Coding Agent SDK](lessons/s07-coding-agent-sdk/README.md) | CLI 背后的 Agent、工具、资源和 Session 怎样被装配？ | 真实模型的受控 `AgentSession`；离线 SDK 测试 | `pi-coding-agent` | 已完成 |
+| [s08 Session Tree](lessons/s08-session-tree/README.md) | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 本地创建分支并从 leaf 重建 Context | `pi-coding-agent` | 已完成 |
 | s09 Session Compaction | Pi 怎样用 compaction entry 改变 Context，同时保留原始 Session Tree？ | cut point、summary 和 compaction entry | `pi-agent-core`、`pi-coding-agent` | 计划中 |
 | s10 ResourceLoader | Pi 怎样处理上下文文件、Skills、Prompt 的 scope、优先级与诊断？ | 临时项目目录的资源发现与 precedence | `pi-coding-agent` | 计划中 |
 | s11 Extension Runtime | Pi 的 Extension 如何注册事件、工具和命令并隔离 handler 错误？ | inline extension、事件总线和工具拦截 | `pi-coding-agent` | 计划中 |
 | s12 Embedded Harness | 怎样把模型、会话、资源、扩展和只读工具组合成应用？ | 可嵌入的离线研究助手 | `pi-coding-agent` | 计划中 |
-| s13 Runtime Modes | interactive、text、JSON 和 RPC 为什么能共用同一 Runtime？ | CLI 参数与运行模式路由器 | `pi-coding-agent` | 计划中 |
-| s14 TUI Diff Render | 终端为什么只重绘发生变化的行？ | 内存 Terminal 的两帧差分渲染 | `pi-tui` | 计划中 |
-| s15 RPC JSONL | 外部程序怎样通过严格 JSONL 控制 Pi？ | `RpcClient` 与隔离的 RPC 子进程 | `pi-coding-agent` | 计划中 |
+| [s13 Runtime Modes](lessons/s13-runtime-modes/README.md) | interactive、text、JSON 和 RPC 为什么能共用同一 Runtime？ | CLI 参数与运行模式路由器 | `pi-coding-agent` | 已完成 |
+| [s14 TUI Diff Render](lessons/s14-tui-diff-render/README.md) | 终端为什么只重绘发生变化的行？ | 内存 Terminal 的两帧差分渲染 | `pi-tui` | 已完成 |
+| [s15 RPC JSONL](lessons/s15-rpc-jsonl/README.md) | 外部程序怎样通过严格 JSONL 控制 Pi？ | 真实模型的 `RpcClient` 与隔离 RPC 子进程；离线协议测试 | `pi-coding-agent` | 已完成 |
 
 ## 每课实现要求
 
 每节课程必须同时交付：
 
 1. `README.md`：采用“问题 -> 解决方案 -> 工作原理 -> 试一下 -> 接下来 -> 深入 Pi 源码”结构
-2. `demo.ts`：默认离线运行，核心调用链能按文件顺序直接阅读
-3. `demo.test.ts`：至少覆盖一个正常路径和一个失败或边界路径
+2. `code.ts`：唯一面向读者的教学入口；涉及模型调用时默认走真实模型，核心调用链能按文件顺序直接阅读
+3. `code.test.ts`：离线运行，至少覆盖一个正常路径和一个失败或边界路径
 4. `images/*.svg`：至少一张中文主图，复杂机制增加事件或源码调用图
 5. 固定源码链接：指向 Pi commit `2b3fda9921b5590f285165287bd442a25817f17b`
 6. 明确边界：区分教学简化、公开 API、内部实现和实验性能力
@@ -77,8 +77,8 @@ flowchart LR
 - 前置映射：`learn-claude-code/s01_agent_loop`。
 - 核心结论：本课不再实现最小循环，而是研究 `Agent` 怎样把模型事件流组织成 agent、turn、message 三层生命周期，并同步维护 state。
 - 公开 API：`Agent`、`Agent.prompt()`、`Agent.subscribe()`、`Agent.state`、`AgentEvent`。
-- Demo：faux 文本响应，输出从 `agent_start` 到 `agent_end` 的完整顺序，并观察 `isStreaming`、`streamingMessage` 和最终 transcript。
-- 测试：事件顺序、user/assistant 消息、错误响应仍产生 `agent_end`。
+- `code.ts`：默认使用真实模型，输出从 `agent_start` 到 `agent_end` 的完整顺序，并观察 `isStreaming`、`streamingMessage` 和最终 transcript。
+- `code.test.ts`：faux stream 验证事件顺序、user/assistant 消息和错误响应仍产生 `agent_end`。
 - 主图：prompt、事件 reducer 和 AgentState 的关系。
 
 ### s03 Tool Execution Pipeline
@@ -86,8 +86,8 @@ flowchart LR
 - 前置映射：`learn-claude-code/s02_tool_use`、`s03_permission`、`s04_hooks`。
 - 核心结论：不再讲 Tool Loop 基础，直接研究 Pi 如何组合 typed validation、`beforeToolCall`、并行/串行执行、`afterToolCall` 和 terminate。
 - 公开 API：`AgentTool`、`Type`、`toolExecution`、`beforeToolCall`、`afterToolCall`。
-- Demo：同一 assistant 消息请求两个可并行工具和一个 sequential 工具，记录 preflight、完成顺序、结果顺序与拦截结果。
-- 测试：非法参数不执行；parallel 完成事件按实际顺序；toolResult 仍按源码顺序；全部 terminate 才提前结束。
+- `code.ts`：真实模型按提示请求两个并行工具和一个串行/被阻断工具，记录 preflight、完成顺序、结果顺序与拦截结果。
+- `code.test.ts`：faux stream 验证非法参数不执行、parallel 完成事件按实际顺序、toolResult 保持源码顺序，以及全部 terminate 才提前结束。
 - 主图：prepare、validate、hook、execute、finalize、toolResult 六阶段管线。
 
 ### s04 Message Boundary
@@ -118,8 +118,8 @@ flowchart LR
 
 - 核心结论：`createAgentSession()` 是模型、Agent、工具、资源和 SessionManager 的装配入口。
 - 公开 API：`createAgentSession()`、`AgentSession`、`SessionManager.inMemory()`。
-- Demo：显式 in-memory 依赖和 faux model，不读取用户 `~/.pi`。
-- 测试：事件与最终文本确定、dispose 后无残留。
+- `code.ts`：显式 in-memory 宿主依赖和真实模型，不读取用户 `~/.pi`。
+- `code.test.ts`：faux model 验证事件与最终文本，`dispose` 后无动态注册残留。
 - 主图：SDK options 到 AgentSession 的装配图。
 
 ### s08 Session Tree
@@ -188,34 +188,6 @@ flowchart LR
 - Demo：隔离配置目录，拉起 RPC 子进程，完成 `getState -> promptAndWait -> getLastAssistantText`。
 - 测试：响应与事件分流、Unicode 行分隔符、错误 model、子进程清理。
 - 主图：宿主进程与 Pi RPC 子进程之间的两条 JSONL 通道。
-
-## 并行实施边界
-
-### Core Track：s02-s06
-
-- 只编辑 `lessons/s02-*` 至 `lessons/s06-*` 和 `src/tracks/core/`。
-- s02 先建立最小 scripted Agent fixture；s03-s06 在该契约稳定后可以并行。
-
-### Harness Track：s07-s12
-
-- 只编辑 `lessons/s07-*` 至 `lessons/s12-*` 和 `src/tracks/harness/`。
-- s07 先建立完全离线的 AgentSession fixture；s08、s10、s11 可并行，s09 依赖 s08，s12 最后组合。
-
-### Runtime/UI Track：s13-s15
-
-- 只编辑 `lessons/s13-*` 至 `lessons/s15-*` 和 `src/tracks/runtime-ui/`。
-- 三课在 `pi-coding-agent` 和 `pi-tui` 依赖锁定后可分别实现，不修改根级运行器。
-
-### Integration Owner
-
-主任务独占以下文件：
-
-- `package.json`、`package-lock.json`
-- `README.md`、`COURSE_PLAN.md`、`SOURCES.md`、`AGENTS.md`
-- `scripts/run-lesson.ts`、`scripts/check-lessons.ts`
-- Git 提交、GitHub Actions 与最终导航
-
-各 agent 不创建 commit，不修改其他 track 的课程目录。所有课程合并后由主任务统一执行 `npm run verify`、渲染 SVG 并检查文档导航。
 
 ## 附录
 

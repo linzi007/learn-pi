@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="510" viewBox="0 0 1320 510" role="img" aria-labelledby="title desc">
+  <title id="title">一轮无工具 Pi Agent 生命周期</title>
+  <desc id="desc">从 agent_start 到 agent_end 的无工具调用顺序，展示 user 消息、partial assistant、完整 assistant 以及真正 idle 的时刻。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#46607a"/></marker>
+    <style>
+      .title { font: 700 27px system-ui, sans-serif; fill: #17202a; }
+      .label { font: 700 15px system-ui, sans-serif; fill: #17202a; }
+      .small { font: 400 13px system-ui, sans-serif; fill: #405264; }
+      .code { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #1f3b4d; }
+    </style>
+  </defs>
+  <rect width="1320" height="510" fill="#f7fafc"/>
+  <text x="46" y="49" class="title">一轮无工具调用：事件通知与状态变化的对照</text>
+  <line x1="94" y1="240" x2="1222" y2="240" stroke="#46607a" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <circle cx="120" cy="240" r="13" fill="#c99824"/>
+  <text x="74" y="187" class="code">agent_start</text><text x="80" y="208" class="code">turn_start</text>
+  <text x="62" y="289" class="small">isStreaming=true</text>
+
+  <circle cx="340" cy="240" r="13" fill="#4894b5"/>
+  <text x="258" y="187" class="code">message_start(user)</text><text x="264" y="208" class="code">message_end(user)</text>
+  <text x="238" y="289" class="small">user 写入 messages</text>
+
+  <circle cx="570" cy="240" r="13" fill="#8268a8"/>
+  <text x="474" y="198" class="code">message_start(assistant)</text>
+  <text x="454" y="289" class="small">创建 partial assistant</text>
+
+  <circle cx="790" cy="240" r="13" fill="#8268a8"/>
+  <text x="690" y="198" class="code">message_update(text_delta) × N</text>
+  <text x="659" y="289" class="small">只替换 streamingMessage</text>
+
+  <circle cx="1010" cy="240" r="13" fill="#4f9a67"/>
+  <text x="924" y="187" class="code">message_end(assistant)</text><text x="965" y="208" class="code">turn_end(stop)</text>
+  <text x="886" y="289" class="small">完整 assistant 写入 messages</text>
+
+  <circle cx="1210" cy="240" r="13" fill="#4f9a67"/>
+  <text x="1154" y="187" class="code">agent_end</text><text x="1129" y="208" class="code">finishRun()</text>
+  <text x="1107" y="289" class="small">最终 isStreaming=false</text>
+
+  <rect x="94" y="353" width="1126" height="103" rx="8" fill="#ffffff" stroke="#8aa3b8" stroke-width="2"/>
+  <text x="122" y="386" class="label">不要把 agent_end 误当成已经 idle</text>
+  <text x="122" y="415" class="small">agent_end 是最后一个 loop event。listener 仍在执行时，snapshot 里的 isStreaming 还是 true。</text>
+  <text x="122" y="438" class="small">所有 listener settle 后，Agent 才调用 finishRun() 清除 runtime-owned state；await prompt()/waitForIdle() 以这个边界完成。</text>
+</svg>

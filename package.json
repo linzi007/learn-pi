@@ -2,7 +2,7 @@
 	"name": "learn-pi",
 	"version": "0.1.0",
 	"private": true,
-	"description": "通过中文文档和可运行 Demo 学习 Pi Agent Harness",
+	"description": "通过中文文档和可运行代码学习 Pi Agent Harness",
 	"type": "module",
 	"license": "MIT",
 	"scripts": {

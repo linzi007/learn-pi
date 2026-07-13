@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
+  <title id="title">Pi Runtime Modes 路由概览</title>
+  <desc id="desc">CLI 参数和 TTY 状态先经过 mode router，然后创建的同一个 AgentSessionRuntime 被交给 InteractiveMode、文本 Print、JSON Print 或 RPC adapter。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <style>
+      .title { font: 700 28px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #172033; }
+      .subtitle { font: 400 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #536076; }
+      .label { font: 700 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #172033; }
+      .body { font: 600 15px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #334155; }
+      .small { font: 500 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #536076; }
+      .white { font: 700 18px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="780" fill="#f8fafc"/>
+  <text x="600" y="48" text-anchor="middle" class="title">Pi：同一个 Runtime，四种 Adapter</text>
+  <text x="600" y="78" text-anchor="middle" class="subtitle">变化的是进程输入输出协议，不是 Agent、工具、Session 或 Extension 内核</text>
+
+  <rect x="55" y="120" width="255" height="210" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <text x="182" y="154" text-anchor="middle" class="label">输入条件</text>
+  <line x1="78" y1="168" x2="287" y2="168" stroke="#fdba74"/>
+  <text x="85" y="202" class="body">argv</text>
+  <text x="85" y="230" class="small">-p / --mode json / rpc</text>
+  <text x="85" y="270" class="body">stdin.isTTY</text>
+  <text x="85" y="304" class="body">stdout.isTTY</text>
+
+  <rect x="385" y="105" width="350" height="240" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+  <text x="560" y="140" text-anchor="middle" class="label">mode router 优先级</text>
+  <line x1="412" y1="154" x2="708" y2="154" stroke="#93c5fd"/>
+  <rect x="418" y="174" width="284" height="34" rx="6" fill="#dbeafe"/>
+  <text x="560" y="197" text-anchor="middle" class="body">1. mode === "rpc"</text>
+  <rect x="418" y="216" width="284" height="34" rx="6" fill="#e0e7ff"/>
+  <text x="560" y="239" text-anchor="middle" class="body">2. mode === "json"</text>
+  <rect x="418" y="258" width="284" height="34" rx="6" fill="#fef3c7"/>
+  <text x="560" y="281" text-anchor="middle" class="body">3. -p 或任一非 TTY</text>
+  <rect x="418" y="300" width="284" height="34" rx="6" fill="#dcfce7"/>
+  <text x="560" y="323" text-anchor="middle" class="body">4. interactive</text>
+
+  <path d="M310 225 H377" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M560 345 V395" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="350" y="405" width="420" height="86" rx="8" fill="#172033"/>
+  <text x="560" y="441" text-anchor="middle" class="white">AgentSessionRuntime</text>
+  <text x="560" y="470" text-anchor="middle" style="font: 500 14px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; fill: #cbd5e1;">同一份 model · tools · session · resources · extensions</text>
+
+  <path d="M350 448 H250 V548" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M455 491 V548" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M665 491 V548" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <path d="M770 448 H870 V548" fill="none" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="55" y="560" width="250" height="145" rx="8" fill="#ecfdf5" stroke="#16a34a" stroke-width="2"/>
+  <text x="180" y="596" text-anchor="middle" class="label">interactive</text>
+  <text x="180" y="630" text-anchor="middle" class="body">InteractiveMode</text>
+  <text x="180" y="661" text-anchor="middle" class="small">终端组件树 · 持续运行</text>
+  <text x="180" y="688" text-anchor="middle" class="small">默认真实 TTY</text>
+
+  <rect x="330" y="560" width="250" height="145" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+  <text x="455" y="596" text-anchor="middle" class="label">print</text>
+  <text x="455" y="630" text-anchor="middle" class="body">runPrintMode(text)</text>
+  <text x="455" y="661" text-anchor="middle" class="small">最终 assistant 文本</text>
+  <text x="455" y="688" text-anchor="middle" class="small">-p 或非 TTY</text>
+
+  <rect x="605" y="560" width="250" height="145" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="2"/>
+  <text x="730" y="596" text-anchor="middle" class="label">json</text>
+  <text x="730" y="630" text-anchor="middle" class="body">runPrintMode(json)</text>
+  <text x="730" y="661" text-anchor="middle" class="small">header + events JSONL</text>
+  <text x="730" y="688" text-anchor="middle" class="small">--mode json</text>
+
+  <rect x="880" y="560" width="265" height="145" rx="8" fill="#fdf2f8" stroke="#db2777" stroke-width="2"/>
+  <text x="1012" y="596" text-anchor="middle" class="label">rpc</text>
+  <text x="1012" y="630" text-anchor="middle" class="body">runRpcMode</text>
+  <text x="1012" y="661" text-anchor="middle" class="small">commands + responses + events</text>
+  <text x="1012" y="688" text-anchor="middle" class="small">--mode rpc</text>
+
+  <rect x="190" y="735" width="820" height="32" rx="7" fill="#e2e8f0"/>
+  <text x="600" y="757" text-anchor="middle" class="small">所有 adapter 接收同一个 runtime；JSON 与 text 甚至共用 runPrintMode()</text>
+</svg>

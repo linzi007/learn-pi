@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="800" viewBox="0 0 1440 800" role="img" aria-labelledby="title desc">
+  <title id="title">s07：宿主将真实模型装配成内存 AgentSession</title>
+  <desc id="desc">环境变量创建真实 Anthropic-compatible Provider 和 Model。宿主把认证、模型注册表、资源和会话保持在内存，再交给 createAgentSession。最后发送一次不使用工具的 prompt，只观察事件和最终文本，不读取用户目录或写入 JSONL。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0,0 L10,5.5 L0,11 Z" fill="#475569"/>
+    </marker>
+    <style>
+      .title { font: 700 31px system-ui, sans-serif; fill: #172033; }
+      .subtitle { font: 17px system-ui, sans-serif; fill: #475569; }
+      .label { font: 700 18px system-ui, sans-serif; fill: #172033; }
+      .body { font: 16px system-ui, sans-serif; fill: #334155; }
+      .small { font: 14px system-ui, sans-serif; fill: #475569; }
+      .code { font: 600 16px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #172033; }
+      .tag { font: 600 13px system-ui, sans-serif; }
+      .light-label { font: 700 18px system-ui, sans-serif; fill: #ffffff; }
+      .light-body { font: 16px system-ui, sans-serif; fill: #dbe7f3; }
+      .arrow { stroke: #475569; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .divider { stroke: #cbd5e1; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="800" fill="#f8fafc"/>
+  <text x="56" y="58" class="title">宿主程序如何得到一个真实、隔离的 Pi Coding Agent？</text>
+  <text x="56" y="90" class="subtitle">真实模型请求保留；认证、资源、会话与工具边界由宿主显式控制。</text>
+  <line x1="56" y1="118" x2="1384" y2="118" class="divider"/>
+
+  <text x="56" y="157" class="label">本课实际执行顺序</text>
+
+  <rect x="56" y="184" width="270" height="214" rx="8" fill="#e8f1ff" stroke="#2563eb" stroke-width="2"/>
+  <rect x="78" y="204" width="86" height="26" rx="5" fill="#d7e7ff"/>
+  <text x="91" y="222" class="tag" fill="#1d4ed8">真实配置</text>
+  <text x="78" y="262" class="code">环境变量</text>
+  <text x="78" y="292" class="body">ANTHROPIC_API_KEY</text>
+  <text x="78" y="318" class="body">MODEL_ID / BASE_URL</text>
+  <text x="78" y="360" class="small">不写入课程代码或会话文件</text>
+
+  <path d="M327 291 H368" class="arrow"/>
+
+  <rect x="370" y="184" width="290" height="214" rx="8" fill="#eee9ff" stroke="#7c3aed" stroke-width="2"/>
+  <rect x="392" y="204" width="112" height="26" rx="5" fill="#e2d9ff"/>
+  <text x="405" y="222" class="tag" fill="#6d28d9">共享内核</text>
+  <text x="392" y="262" class="code">createAnthropicCompatible</text>
+  <text x="392" y="286" class="code">Runtime()</text>
+  <text x="392" y="326" class="body">Provider + Model</text>
+  <text x="392" y="360" class="small">真实 Provider 的 streamSimple()</text>
+
+  <path d="M661 291 H702" class="arrow"/>
+
+  <rect x="704" y="154" width="365" height="274" rx="8" fill="#e8f8ef" stroke="#16a34a" stroke-width="2"/>
+  <rect x="726" y="174" width="121" height="26" rx="5" fill="#d5f2e0"/>
+  <text x="739" y="192" class="tag" fill="#15803d">宿主显式边界</text>
+  <text x="726" y="232" class="code">AuthStorage.inMemory()</text>
+  <text x="726" y="263" class="code">ModelRegistry.inMemory()</text>
+  <text x="726" y="286" class="small">注册 Provider、Model、streamSimple</text>
+  <text x="726" y="323" class="code">Memory ResourceLoader</text>
+  <text x="726" y="346" class="small">只返回 memory:// AGENTS.md</text>
+  <text x="726" y="383" class="code">SessionManager.inMemory()</text>
+  <text x="726" y="406" class="small">没有 JSONL 持久化</text>
+
+  <path d="M1070 291 H1111" class="arrow"/>
+
+  <rect x="1113" y="184" width="271" height="214" rx="8" fill="#fff0e5" stroke="#ea580c" stroke-width="2"/>
+  <rect x="1135" y="204" width="90" height="26" rx="5" fill="#ffe0c5"/>
+  <text x="1148" y="222" class="tag" fill="#c2410c">Pi SDK</text>
+  <text x="1135" y="262" class="code">createAgentSession()</text>
+  <text x="1135" y="300" class="body">得到 AgentSession</text>
+  <text x="1135" y="330" class="body">noTools: "all"</text>
+  <text x="1135" y="360" class="small">本课不执行读写或 shell</text>
+
+  <path d="M1249 399 V478" class="arrow"/>
+
+  <rect x="1000" y="480" width="330" height="136" rx="8" fill="#fff7e8" stroke="#d97706" stroke-width="2"/>
+  <text x="1024" y="519" class="label">一次 prompt</text>
+  <text x="1024" y="552" class="code">session.prompt(question)</text>
+  <text x="1024" y="582" class="small">真实模型流进入 AgentSession</text>
+
+  <path d="M1000 548 H912" class="arrow"/>
+
+  <rect x="580" y="480" width="330" height="136" rx="8" fill="#fff7e8" stroke="#d97706" stroke-width="2"/>
+  <text x="604" y="519" class="label">宿主观察</text>
+  <text x="604" y="552" class="code">AgentSessionEvent</text>
+  <text x="604" y="582" class="small">事件顺序、结束原因、最终文本</text>
+
+  <path d="M745 617 V658" class="arrow"/>
+
+  <rect x="194" y="660" width="1052" height="76" rx="8" fill="#172033"/>
+  <text x="240" y="692" class="light-label">宿主得到的保证</text>
+  <text x="240" y="720" class="light-body">真实模型请求；不读取用户 ~/.pi；不加载本机资源；不写 JSONL；不启用文件或 shell 工具。</text>
+</svg>
