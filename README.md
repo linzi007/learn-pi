@@ -4,6 +4,12 @@
 
 > 本项目是非官方学习仓库，不是 Pi 的 fork、替代实现或官方文档镜像。
 
+## 推荐前置
+
+建议先完成 [learn-claude-code](https://github.com/shareAI-lab/learn-claude-code)，理解 Agent Loop、工具调用、Hooks、Skills、上下文压缩和 System Prompt 等通用机制。
+
+Learn Pi 不会重新讲一遍这些基础概念，而是继续研究 Pi 的具体实现：统一模型 runtime、Agent 状态机、并行工具管线、消息边界、Session Tree、ResourceLoader、Extension、TUI 和 RPC。
+
 ## 项目目标
 
 Pi 同时包含多模型 API、Agent Loop、工具调用、会话、扩展系统、Coding Agent 和终端 UI。直接阅读完整 monorepo 容易在模块之间迷失，本项目将这些机制拆成可以独立运行和验证的课程。
@@ -28,7 +34,7 @@ npm install --ignore-scripts
 | 课程 | 主题 | 状态 |
 | --- | --- | --- |
 | [s01](lessons/s01-model-stream/README.md) | Provider、Model、Context 与流式事件 | 已完成 |
-| s02 | 最小 Agent Loop | 计划中 |
+| s02 | Pi Agent Runtime 与状态事件 | 计划中 |
 
 运行第一课：
 

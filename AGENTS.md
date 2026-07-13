@@ -6,6 +6,8 @@
 
 - 本项目不是 Pi 的 fork、替代实现或官方文档镜像。
 - 可以参考 `learn-claude-code` 的分课方式，但不得复制其课程代码或累积快照结构。
+- 推荐读者先完成 `learn-claude-code`。本项目默认读者已经理解 Agent Loop、Tool Use、Hooks、Skills、Context Compact 和 System Prompt 等通用概念。
+- 课程必须聚焦 Pi 的具体实现和设计取舍，不重新讲解 `learn-claude-code` 已覆盖的通用 Agent 入门内容。
 - 讲解必须以 Pi 的真实源码为依据；教学简化必须明确标注，不能写成上游的真实行为。
 - 当前第一版只维护简体中文，不同步维护英文、日文等翻译版本。
 
@@ -73,6 +75,8 @@ lessons/
 7. `<details><summary>深入 Pi 源码</summary>`：放固定 commit 源码定位、生产实现差异、错误路径和扩展阅读
 
 主线先让读者获得直觉和成功体验，再解释术语和工程边界。学习目标、文件清单、测试契约和源码链接不得堆在正文开头。
+
+涉及 `learn-claude-code` 已讲过的概念时，正文先用一句话标出推荐前置课程，然后直接进入 Pi 的实现差异。禁止再次从“什么是 Agent Loop”“什么是 Tool Call”“为什么要压缩上下文”开始讲。
 
 README 中展示的最小代码必须自洽，并直接来自课程 Demo 的同一执行链。禁止文档展示一套伪代码、实际 Demo 再通过多个 helper 隐藏关键逻辑。
 

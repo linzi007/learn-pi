@@ -2,11 +2,13 @@
 
 [返回首页](../../README.md)
 
-`s01` → s02 Agent Loop → s03 Tool Call → ...
+`s01` → s02 Agent Runtime → s03 Tool Pipeline → ...
 
 > *“一次模型调用，两种读取方式”* —— 事件流负责实时更新，`result()` 负责给出最终完整消息。
 >
 > **pi-ai 层**：先统一“怎样调用模型”，下一课再解决“怎样让模型持续行动”。
+
+推荐前置：已完成 `learn-claude-code`，了解最小 Agent Loop。本课不重复 Agent Loop，而是解释 Pi 在模型调用边界新增的 Provider、Model 和事件协议。
 
 ---
 
@@ -198,7 +200,7 @@ npm run test:lesson -- s01
 
 但模型回答结束后，程序也结束了。即使模型说“我需要读取一个文件”，当前代码也不会执行工具，更不会把工具结果交回模型继续思考。
 
-s02 Agent Loop → 把一次模型调用放进循环，让模型输出能够触发下一步行动。
+s02 Agent Runtime → 不再重写最小循环，而是观察 Pi 怎样把模型流转换成 AgentEvent、AgentState 和严格的生命周期。
 
 <details>
 <summary>深入 Pi 源码</summary>
