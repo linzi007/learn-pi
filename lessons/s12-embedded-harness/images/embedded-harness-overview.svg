@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="800" viewBox="0 0 1360 800" role="img" aria-labelledby="title desc">
+  <title id="title">Pi 嵌入式运行框架的依赖注入与执行链</title>
+  <desc id="desc">宿主提供临时项目资源、内存认证和模型目录、内存会话、审计扩展和只读工具清单。createAgentSession 将它们装配为 AgentSession，Pi 执行 read 并让扩展审计工具结果。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#46607a"/></marker>
+    <style>
+      .title { font: 700 29px system-ui, sans-serif; fill: #17202a; }
+      .subtitle { font: 400 16px system-ui, sans-serif; fill: #52616f; }
+      .label { font: 700 17px system-ui, sans-serif; fill: #17202a; }
+      .text { font: 400 14px system-ui, sans-serif; fill: #2c3e50; }
+      .small { font: 400 13px system-ui, sans-serif; fill: #405264; }
+      .code { font: 600 13px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #1f3b4d; }
+      .white { font: 700 17px system-ui, sans-serif; fill: #ffffff; }
+    </style>
+  </defs>
+  <rect width="1360" height="800" fill="#f7fafc"/>
+  <text x="50" y="51" class="title">嵌入 Pi：宿主提供依赖，SDK 负责把它们接成一次运行</text>
+  <text x="50" y="79" class="subtitle">不是重写 CLI，也不是把所有状态交给默认配置。每一项外部能力都由宿主明确交出。</text>
+
+  <rect x="50" y="118" width="254" height="124" rx="8" fill="#e6f4ea" stroke="#4f9a67" stroke-width="2"/>
+  <text x="74" y="151" class="label">临时项目资源</text>
+  <text x="74" y="181" class="code">AGENTS.md + SKILL.md</text>
+  <text x="74" y="207" class="small">只加载本次 fixture</text>
+  <text x="74" y="228" class="small">不扫描用户目录</text>
+
+  <rect x="50" y="270" width="254" height="124" rx="8" fill="#eaf2fb" stroke="#3979aa" stroke-width="2"/>
+  <text x="74" y="303" class="label">内存模型依赖</text>
+  <text x="74" y="333" class="code">AuthStorage + ModelRegistry</text>
+  <text x="74" y="359" class="small">fixture Provider</text>
+  <text x="74" y="380" class="small">不读取 API Key 环境变量</text>
+
+  <rect x="50" y="422" width="254" height="124" rx="8" fill="#f2ecfb" stroke="#8268a8" stroke-width="2"/>
+  <text x="74" y="455" class="label">内存会话</text>
+  <text x="74" y="485" class="code">SessionManager.inMemory()</text>
+  <text x="74" y="511" class="small">不写 JSONL 历史</text>
+
+  <rect x="50" y="574" width="254" height="124" rx="8" fill="#fff4d6" stroke="#c99824" stroke-width="2"/>
+  <text x="74" y="607" class="label">宿主策略</text>
+  <text x="74" y="637" class="code">read / grep / find / ls</text>
+  <text x="74" y="663" class="small">仅只读工具 allowlist</text>
+  <text x="74" y="684" class="small">审计扩展 inline factory</text>
+
+  <path d="M304 180 H382" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M304 332 H352 V384 H382" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M304 484 H352 V424 H382" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M304 636 H352 V464 H382" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="384" y="190" width="350" height="304" rx="8" fill="#ffffff" stroke="#6d8da6" stroke-width="2"/>
+  <text x="414" y="230" class="label">公开 SDK 装配入口</text>
+  <text x="414" y="265" class="code">createAgentSession({...})</text>
+  <line x1="414" y1="281" x2="704" y2="281" stroke="#d6e0e8"/>
+  <text x="414" y="319" class="text">1. ResourceLoader 读取受控资源</text>
+  <text x="414" y="351" class="text">2. SessionManager 提供会话状态</text>
+  <text x="414" y="383" class="text">3. allowlist 过滤工具注册表</text>
+  <text x="414" y="415" class="text">4. bindExtensions() 激活审计回调</text>
+  <text x="414" y="458" class="small">宿主只传依赖，不手写 Agent Loop、系统提示或 CLI 生命周期。</text>
+
+  <path d="M734 342 H803" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="805" y="258" width="270" height="170" rx="8" fill="#eef5fb" stroke="#3979aa" stroke-width="2"/>
+  <text x="830" y="297" class="label">AgentSession</text>
+  <text x="830" y="329" class="code">session.prompt(...)</text>
+  <text x="830" y="359" class="small">组合系统提示、工具、扩展</text>
+  <text x="830" y="385" class="small">维护运行事件和内存消息</text>
+
+  <path d="M1075 300 H1142" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="1144" y="244" width="166" height="112" rx="8" fill="#fcecf4" stroke="#bd5b86" stroke-width="2"/>
+  <text x="1166" y="281" class="label">离线模型</text>
+  <text x="1166" y="311" class="code">faux Provider</text>
+  <text x="1166" y="334" class="small">请求 read</text>
+
+  <path d="M1227 356 V438 H1014" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="804" y="458" width="270" height="122" rx="8" fill="#fff4d6" stroke="#c99824" stroke-width="2"/>
+  <text x="829" y="494" class="label">Pi 只读工具</text>
+  <text x="829" y="524" class="code">read(project-notes.md)</text>
+  <text x="829" y="550" class="small">读取临时项目，原文件不变</text>
+
+  <path d="M938 580 V631 H1123" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="1125" y="590" width="185" height="112" rx="8" fill="#f2ecfb" stroke="#8268a8" stroke-width="2"/>
+  <text x="1148" y="627" class="label">审计扩展</text>
+  <text x="1148" y="657" class="code">tool_result</text>
+  <text x="1148" y="680" class="small">给结果加 [审计]</text>
+
+  <path d="M1125 646 H1035 V726 H794" fill="none" stroke="#46607a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="486" y="690" width="306" height="82" rx="8" fill="#e6f4ea" stroke="#4f9a67" stroke-width="2"/>
+  <text x="510" y="724" class="label">内存 transcript</text>
+  <text x="510" y="750" class="small">toolResult 含 [审计]，再交给下一次模型请求</text>
+
+  <rect x="374" y="548" width="356" height="100" rx="8" fill="#17202a"/>
+  <text x="552" y="584" text-anchor="middle" class="white">可复述的规则</text>
+  <text x="552" y="616" text-anchor="middle" style="font: 500 14px system-ui, sans-serif; fill: #dbe7f3;">宿主提供边界与依赖，Pi SDK 负责运行时编排。</text>
+</svg>
