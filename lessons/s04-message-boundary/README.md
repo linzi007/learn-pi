@@ -1,6 +1,6 @@
 # s04：消息边界（Message Boundary）- 保存的记录不等于模型收到的上下文
 
-[← s03 工具执行管线](../s03-tool-execution-pipeline/README.md) · [返回首页](../../README.md) · s05 消息队列（规划中）
+[← s03 工具执行管线](../s03-tool-execution-pipeline/README.md) · [返回首页](../../README.md) · [s05 消息队列 →](../s05-message-queues/README.md)
 
 > **核心结论**：Pi 先用上下文转换（`transformContext`）挑选本轮要看的 Agent 记录，再用模型消息转换（`convertToLlm`）生成模型认识的消息；这两步的返回值只服务这次请求，不会被 Pi 自动写回保存的记录（transcript）。
 

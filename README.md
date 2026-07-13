@@ -43,6 +43,8 @@ npm install --ignore-scripts
 | [s08 会话树](lessons/s08-session-tree/README.md) | 追加历史怎样由当前末端投影为模型上下文 | 本地确定性演示 |
 | [s09 会话压缩](lessons/s09-session-compaction/README.md) | 压缩条目怎样保留会话树并重建后续上下文 | 本地确定性演示 |
 | [s10 资源加载器](lessons/s10-resource-loader/README.md) | 上下文文件、技能和提示词模板怎样按范围发现与诊断 | 本地确定性演示 |
+| [s11 扩展运行时](lessons/s11-extension-runtime/README.md) | 扩展怎样登记规则、拦截工具并隔离 handler 错误 | 本地确定性演示 |
+| [s12 嵌入式运行框架](lessons/s12-embedded-harness/README.md) | 应用怎样显式提供依赖并嵌入完整 SDK 会话 | 本地确定性演示 |
 | [s13 运行模式路由](lessons/s13-runtime-modes/README.md) | 参数与终端环境怎样选择正确入口 | 本地确定性演示 |
 | [s14 终端差分渲染](lessons/s14-tui-diff-render/README.md) | 状态变化为何不等于整屏重绘 | 本地确定性演示 |
 | [s15 RPC 逐行 JSON 通道](lessons/s15-rpc-jsonl/README.md) | 一条 JSON 输出流怎样让响应与事件不串线 | 真实模型 |
@@ -54,7 +56,7 @@ npm run lesson -- s01
 npm run test:lesson -- s01
 ```
 
-s11-s12 仍在后续路线中，依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
+第一版的 15 门课程均已发布；依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
 
 验证整个项目：
 

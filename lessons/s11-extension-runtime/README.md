@@ -1,6 +1,6 @@
 # s11：扩展运行时（Extension Runtime）- 规则注册与执行隔离
 
-s10 资源加载器（规划中） · [返回首页](../../README.md) · s12 嵌入式运行框架（规划中）
+[← s10 资源加载器](../s10-resource-loader/README.md) · [返回首页](../../README.md) · [s12 嵌入式运行框架 →](../s12-embedded-harness/README.md)
 
 > **核心结论**：扩展（Extension）只通过 API 登记事件处理器和规则；扩展运行器（`ExtensionRunner`）在正确的生命周期点调用它们，并把普通 handler 的异常转为诊断，而不是直接击穿宿主运行时。
 

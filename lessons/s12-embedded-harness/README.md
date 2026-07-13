@@ -1,6 +1,6 @@
 # s12：嵌入式运行框架（Embedded Harness）- 应用提供边界，Pi 负责把部件跑起来
 
-[s09 会话压缩](../s09-session-compaction/README.md) → s10-s11（计划中） → **s12 嵌入式运行框架** → [s13 运行模式路由](../s13-runtime-modes/README.md)
+[s09 会话压缩](../s09-session-compaction/README.md) → [s10 资源加载器](../s10-resource-loader/README.md) → [s11 扩展运行时](../s11-extension-runtime/README.md) → **s12 嵌入式运行框架** → [s13 运行模式路由](../s13-runtime-modes/README.md)
 
 > **嵌入 Pi 时，宿主程序不必重写 CLI 或 Agent Loop；它只要明确提供模型、会话、资源、扩展和工具边界，再交给 `createAgentSession()` 组合。**
 

@@ -1,6 +1,6 @@
 # s06：平稳停止（Graceful Stop）- 中止不该留下半截运行
 
-s05 消息队列（规划中） · [返回首页](../../README.md) · [s07 编码智能体 SDK →](../s07-coding-agent-sdk/README.md)
+[← s05 消息队列](../s05-message-queues/README.md) · [返回首页](../../README.md) · [s07 编码智能体 SDK →](../s07-coding-agent-sdk/README.md)
 
 > **核心结论**：`Agent.abort()` 只请求取消当前运行；Pi 仍会把这一轮收束为带 `stopReason="aborted"` 的助手消息、`turn_end` 和 `agent_end`，最后才回到真正空闲的状态。
 

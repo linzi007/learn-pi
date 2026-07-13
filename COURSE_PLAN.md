@@ -53,8 +53,8 @@ flowchart LR
 | [s08 会话树](lessons/s08-session-tree/README.md) | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 本地创建分支并从当前末端重建模型上下文 | `pi-coding-agent` | 已完成 |
 | [s09 会话压缩](lessons/s09-session-compaction/README.md) | Pi 怎样用压缩条目（compaction entry）改变上下文（Context），同时保留原始会话树？ | 阈值、完整回合切点、摘要条目和上下文重建 | `pi-agent-core`、`pi-coding-agent` | 已完成 |
 | [s10 资源加载器](lessons/s10-resource-loader/README.md) | Pi 怎样处理上下文文件、技能（Skills）、提示词（Prompt）的作用域、优先级与诊断？ | 临时项目目录的资源发现、冲突和禁用选项 | `pi-coding-agent` | 已完成 |
-| s11 扩展运行时（Extension Runtime） | Pi 的扩展（Extension）如何注册事件、工具和命令并隔离处理函数错误？ | 内联扩展、事件总线和工具拦截 | `pi-coding-agent` | 计划中 |
-| s12 嵌入式运行框架（Embedded Harness） | 怎样把模型、会话、资源、扩展和只读工具组合成应用？ | 可嵌入的离线研究助手 | `pi-coding-agent` | 计划中 |
+| [s11 扩展运行时](lessons/s11-extension-runtime/README.md) | Pi 的扩展（Extension）如何注册事件、工具和命令并隔离处理函数错误？ | inline extension、事件分发、工具拦截和诊断 | `pi-coding-agent` | 已完成 |
+| [s12 嵌入式运行框架](lessons/s12-embedded-harness/README.md) | 怎样把模型、会话、资源、扩展和只读工具组合成应用？ | 可嵌入的离线研究助手 | `pi-coding-agent` | 已完成 |
 | [s13 运行模式路由](lessons/s13-runtime-modes/README.md) | 参数与终端环境怎样选择正确入口？ | CLI 参数与运行模式路由器 | `pi-coding-agent` | 已完成 |
 | [s14 终端差分渲染](lessons/s14-tui-diff-render/README.md) | 终端为什么只重绘发生变化的行？ | 内存终端的两帧差分渲染 | `pi-tui` | 已完成 |
 | [s15 RPC 逐行 JSON 通道](lessons/s15-rpc-jsonl/README.md) | 外部程序怎样让响应与事件不串线？ | 真实模型的 `RpcClient` 与隔离 RPC 子进程；离线协议测试 | `pi-coding-agent` | 已完成 |
@@ -161,17 +161,17 @@ flowchart LR
 
 - 前置映射：`learn-claude-code/s04_hooks`、`s19_mcp_plugin`。
 - 核心结论：不再解释 hook 概念，而是研究 Pi Extension Runtime 怎样统一注册生命周期事件、工具、命令和错误诊断。
-- 公开 API：`createExtensionRuntime()`、`ExtensionRunner`、`ExtensionAPI`、`defineTool()`。
-- Demo：inline extension 记录事件，并阻止一条危险工具调用。
-- 测试：事件顺序、拦截生效、handler 错误形成 diagnostic。
+- 公开 API：`discoverAndLoadExtensions()`、`ExtensionRunner`、`ExtensionAPI`。
+- `code.ts`：临时 inline extension 记录事件、阻止危险 bash 调用，并将 lifecycle handler 错误转为 diagnostic。
+- `code.test.ts`：事件顺序、拦截生效和 handler 错误形成 diagnostic。
 - 主图：AgentSession 主链上的 hook 切入点。
 
 ### s12 嵌入式运行框架（Embedded Harness）
 
 - 核心结论：SDK 通过依赖注入组合模型、会话、资源、扩展和工具，不需要重新实现 CLI。
-- 公开 API：`createAgentSessionServices()`、`createAgentSessionFromServices()`、`createReadOnlyTools()`。
-- Demo：临时 cwd、in-memory session、fixture AGENTS/Skill、审计 extension 和只读工具组成研究助手。
-- 测试：无 home/API Key、工具保持只读、资源与 extension 实际生效。
+- 公开 API：`createAgentSession()`、`DefaultResourceLoader`、`SessionManager.inMemory()`、`ExtensionFactory`。
+- `code.ts`：临时 cwd、in-memory session、fixture AGENTS/Skill、审计 extension 和只读工具组成确定性研究助手。
+- `code.test.ts`：不读取用户目录/API Key、工具保持只读、资源与 extension 实际生效。
 - 主图：Host App 到 Runtime/Services/Session 的完整装配图。
 
 ### s13 运行模式路由

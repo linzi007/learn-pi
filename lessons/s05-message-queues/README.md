@@ -2,7 +2,7 @@
 
 [返回首页](../../README.md)
 
-[s03 工具执行管线](../s03-tool-execution-pipeline/README.md) → s04 消息边界（计划中） → **s05 消息队列** → s06 平稳停止（计划中）
+[s03 工具执行管线](../s03-tool-execution-pipeline/README.md) → [s04 消息边界](../s04-message-boundary/README.md) → **s05 消息队列** → [s06 平稳停止](../s06-graceful-stop/README.md)
 
 > **Pi 把运行中到来的用户输入先放进两条队列，再在不同的取出点（drain point）送进下一次模型请求。**
 >

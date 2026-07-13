@@ -1,6 +1,6 @@
 # s10：资源加载器（ResourceLoader）- 来源决定顺序，冲突留下诊断
 
-[← s09 会话压缩](../s09-session-compaction/README.md) · [返回首页](../../README.md) · s11 扩展运行时（规划中）
+[← s09 会话压缩](../s09-session-compaction/README.md) · [返回首页](../../README.md) · [s11 扩展运行时 →](../s11-extension-runtime/README.md)
 
 > **核心结论**：Pi 把上下文文件、技能（Skills）和提示词模板（Prompt Templates）当作有来源、有范围的资源来加载；它按既定顺序保留第一个同名资源，并把碰撞和格式问题作为诊断留下，而不是悄悄覆盖。
 

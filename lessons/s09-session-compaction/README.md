@@ -1,6 +1,6 @@
 # s09：会话压缩（Session Compaction）- 摘要替代上下文，不删除原始树
 
-[← s08 会话树](../s08-session-tree/README.md) · [返回首页](../../README.md) · s10 资源加载器（规划中）
+[← s08 会话树](../s08-session-tree/README.md) · [返回首页](../../README.md) · [s10 资源加载器 →](../s10-resource-loader/README.md)
 
 > **核心结论**：Pi 不会把旧会话条目删掉；它把一条压缩条目（`compaction entry`）追加到树尾，用摘要代表较早历史，再从 `firstKeptEntryId` 开始保留最近记录，重建下一次模型上下文。
 
