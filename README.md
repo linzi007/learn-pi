@@ -40,6 +40,7 @@ npm install --ignore-scripts
 | [s06 平稳停止](lessons/s06-graceful-stop/README.md) | 中止或失败后为何仍能得到完整的结束状态 | 真实模型 |
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | 怎样把 Pi Coding Agent 嵌进受控宿主 | 真实模型 |
 | [s08 会话树](lessons/s08-session-tree/README.md) | 追加历史怎样由当前末端投影为模型上下文 | 本地确定性演示 |
+| [s09 会话压缩](lessons/s09-session-compaction/README.md) | 压缩条目怎样保留会话树并重建后续上下文 | 本地确定性演示 |
 | [s13 运行模式路由](lessons/s13-runtime-modes/README.md) | 参数与终端环境怎样选择正确入口 | 本地确定性演示 |
 | [s14 终端差分渲染](lessons/s14-tui-diff-render/README.md) | 状态变化为何不等于整屏重绘 | 本地确定性演示 |
 | [s15 RPC 逐行 JSON 通道](lessons/s15-rpc-jsonl/README.md) | 一条 JSON 输出流怎样让响应与事件不串线 | 真实模型 |
@@ -51,7 +52,7 @@ npm run lesson -- s01
 npm run test:lesson -- s01
 ```
 
-s05、s09-s12 仍在后续路线中，依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
+s05、s10-s12 仍在后续路线中，依赖关系和逐课范围见 [COURSE_PLAN.md](COURSE_PLAN.md)。
 
 验证整个项目：
 

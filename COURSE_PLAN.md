@@ -51,7 +51,7 @@ flowchart LR
 | [s06 平稳停止](lessons/s06-graceful-stop/README.md) | 中止（abort）或失败（error）后怎样仍得到可保存的结束状态和空闲运行器？ | 真实模型中止路径；离线 abort/error/idle 测试 | `pi-agent-core`、`pi-ai` | 已完成 |
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | CLI 背后的 Agent、工具、资源和会话怎样被装配？ | 真实模型的受控 `AgentSession`；离线 SDK 测试 | `pi-coding-agent` | 已完成 |
 | [s08 会话树](lessons/s08-session-tree/README.md) | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 本地创建分支并从当前末端重建模型上下文 | `pi-coding-agent` | 已完成 |
-| s09 会话压缩（Session Compaction） | Pi 怎样用压缩条目（compaction entry）改变上下文（Context），同时保留原始会话树？ | 切点、摘要和压缩条目 | `pi-agent-core`、`pi-coding-agent` | 计划中 |
+| [s09 会话压缩](lessons/s09-session-compaction/README.md) | Pi 怎样用压缩条目（compaction entry）改变上下文（Context），同时保留原始会话树？ | 阈值、完整回合切点、摘要条目和上下文重建 | `pi-agent-core`、`pi-coding-agent` | 已完成 |
 | s10 资源加载器（ResourceLoader） | Pi 怎样处理上下文文件、技能（Skills）、提示词（Prompt）的作用域、优先级与诊断？ | 临时项目目录的资源发现与优先级 | `pi-coding-agent` | 计划中 |
 | s11 扩展运行时（Extension Runtime） | Pi 的扩展（Extension）如何注册事件、工具和命令并隔离处理函数错误？ | 内联扩展、事件总线和工具拦截 | `pi-coding-agent` | 计划中 |
 | s12 嵌入式运行框架（Embedded Harness） | 怎样把模型、会话、资源、扩展和只读工具组合成应用？ | 可嵌入的离线研究助手 | `pi-coding-agent` | 计划中 |
@@ -144,8 +144,8 @@ flowchart LR
 - 前置映射：`learn-claude-code/s08_context_compact`、`s09_memory`。
 - 核心结论：不再解释为什么需要压缩，而是研究 Pi 如何新增摘要 entry、选择 cut point 并从 Session Tree 重建后续 Context。
 - 公开 API：`shouldCompact()`、`findCutPoint()`、`prepareCompaction()`、`compact()`。
-- Demo：构造长对话，展示 cut point、summary 和压缩后的 Context。
-- 测试：短上下文不压缩、切点保持完整 turn、summary 失败路径。
+- `code.ts`：构造固定会话，展示阈值、切点、摘要条目和压缩后的 Context；不调用模型。
+- `code.test.ts`：短上下文不压缩、切点保持完整 turn、摘要失败与分裂回合保护。
 - 主图：token threshold 到 compaction entry 的流水线。
 
 ### s10 资源加载器（ResourceLoader）
