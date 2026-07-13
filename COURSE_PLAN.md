@@ -52,7 +52,7 @@ flowchart LR
 | [s07 编码智能体 SDK](lessons/s07-coding-agent-sdk/README.md) | CLI 背后的 Agent、工具、资源和会话怎样被装配？ | 真实模型的受控 `AgentSession`；离线 SDK 测试 | `pi-coding-agent` | 已完成 |
 | [s08 会话树](lessons/s08-session-tree/README.md) | 为什么 Pi 会话是追加日志和树，而不是聊天数组？ | 本地创建分支并从当前末端重建模型上下文 | `pi-coding-agent` | 已完成 |
 | [s09 会话压缩](lessons/s09-session-compaction/README.md) | Pi 怎样用压缩条目（compaction entry）改变上下文（Context），同时保留原始会话树？ | 阈值、完整回合切点、摘要条目和上下文重建 | `pi-agent-core`、`pi-coding-agent` | 已完成 |
-| s10 资源加载器（ResourceLoader） | Pi 怎样处理上下文文件、技能（Skills）、提示词（Prompt）的作用域、优先级与诊断？ | 临时项目目录的资源发现与优先级 | `pi-coding-agent` | 计划中 |
+| [s10 资源加载器](lessons/s10-resource-loader/README.md) | Pi 怎样处理上下文文件、技能（Skills）、提示词（Prompt）的作用域、优先级与诊断？ | 临时项目目录的资源发现、冲突和禁用选项 | `pi-coding-agent` | 已完成 |
 | s11 扩展运行时（Extension Runtime） | Pi 的扩展（Extension）如何注册事件、工具和命令并隔离处理函数错误？ | 内联扩展、事件总线和工具拦截 | `pi-coding-agent` | 计划中 |
 | s12 嵌入式运行框架（Embedded Harness） | 怎样把模型、会话、资源、扩展和只读工具组合成应用？ | 可嵌入的离线研究助手 | `pi-coding-agent` | 计划中 |
 | [s13 运行模式路由](lessons/s13-runtime-modes/README.md) | 参数与终端环境怎样选择正确入口？ | CLI 参数与运行模式路由器 | `pi-coding-agent` | 已完成 |
@@ -153,8 +153,8 @@ flowchart LR
 - 前置映射：`learn-claude-code/s07_skill_loading`、`s10_system_prompt`。
 - 核心结论：不再实现简单 Skill 扫描，而是研究 Pi 如何按 scope、precedence 和 diagnostics 加载上下文文件、Skills 与 Prompt Templates。
 - 公开 API：`DefaultResourceLoader`、`loadProjectContextFiles()`、`loadSkillsFromDir()`、`formatSkillsForPrompt()`。
-- Demo：在临时目录构造多层 AGENTS.md、一个 Skill 和 Prompt，打印加载顺序和诊断。
-- 测试：父子顺序、去重、坏 frontmatter、禁用选项。
+- `code.ts`：在临时目录构造多层 AGENTS.md、同名技能与提示词模板，打印加载顺序、冲突诊断和禁用结果。
+- `code.test.ts`：父子顺序、去重、坏 frontmatter 和禁用选项。
 - 主图：项目文件树经过 discovery 和 precedence 进入 ResourceLoader。
 
 ### s11 扩展运行时（Extension Runtime）
