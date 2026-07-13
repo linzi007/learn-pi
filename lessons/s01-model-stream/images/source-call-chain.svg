@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">课程 Demo 到 Pi 源码的调用链</title>
+  <desc id="desc">从课程 demo 的公开 API 调用出发，沿 Models 实现、Provider 实现和事件流实现阅读 Pi 源码。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="520" rx="8" fill="#f8fafc"/>
+  <path d="M8 0 H952 Q960 0 960 8 V64 H0 V8 Q0 0 8 0 Z" fill="#1d4ed8"/>
+  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">课程 Demo 到 Pi 源码的调用链</text>
+
+  <text x="158" y="103" text-anchor="middle" fill="#1e3a8a" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">课程代码</text>
+  <text x="480" y="103" text-anchor="middle" fill="#166534" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">公开 API</text>
+  <text x="802" y="103" text-anchor="middle" fill="#9a3412" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">上游内部实现</text>
+
+  <rect x="52" y="132" width="212" height="88" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="158" y="166" text-anchor="middle" fill="#1e3a8a" font-size="15" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">demo.ts</text>
+  <text x="158" y="193" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">按顺序展示完整主链路</text>
+
+  <path d="M264 176 H332" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="344" y="126" width="272" height="100" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="480" y="158" text-anchor="middle" fill="#166534" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">createModels()</text>
+  <text x="480" y="181" text-anchor="middle" fill="#166534" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">fauxProvider()</text>
+  <text x="480" y="204" text-anchor="middle" fill="#166534" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">models.streamSimple()</text>
+
+  <path d="M616 176 H684" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="696" y="126" width="212" height="100" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="802" y="158" text-anchor="middle" fill="#9a3412" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">ModelsImpl</text>
+  <text x="802" y="183" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">查 Provider + 解析认证</text>
+  <text x="802" y="205" text-anchor="middle" fill="#64748b" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">models.ts</text>
+
+  <path d="M802 226 V268" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="696" y="280" width="212" height="94" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="802" y="312" text-anchor="middle" fill="#9a3412" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">streamWithDeltas()</text>
+  <text x="802" y="337" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">把完整响应拆成事件</text>
+  <text x="802" y="358" text-anchor="middle" fill="#64748b" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">providers/faux.ts</text>
+
+  <path d="M696 327 H616" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="344" y="280" width="272" height="94" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="480" y="312" text-anchor="middle" fill="#166534" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">AssistantMessageEventStream</text>
+  <text x="480" y="337" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">异步迭代 + result()</text>
+  <text x="480" y="358" text-anchor="middle" fill="#64748b" font-size="12" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">utils/event-stream.ts</text>
+
+  <path d="M344 327 H264" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="52" y="280" width="212" height="94" rx="8" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <text x="158" y="312" text-anchor="middle" fill="#1e3a8a" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">for await...of</text>
+  <text x="158" y="337" text-anchor="middle" fill="#1e3a8a" font-size="14" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">stream.result()</text>
+  <text x="158" y="358" text-anchor="middle" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">回到课程观察结果</text>
+
+  <rect x="52" y="418" width="856" height="64" rx="8" fill="#ffffff" stroke="#cbd5e1"/>
+  <line x1="86" y1="444" x2="136" y2="444" stroke="#16a34a" stroke-width="3"/>
+  <text x="148" y="449" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">公开 API：课程可以直接依赖</text>
+  <line x1="404" y1="444" x2="454" y2="444" stroke="#f97316" stroke-width="3" stroke-dasharray="7 5"/>
+  <text x="466" y="449" fill="#475569" font-size="13" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">内部实现：用于理解原理，不在 Demo 中深度导入</text>
+  <text x="86" y="470" fill="#64748b" font-size="12" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">推荐阅读顺序：先运行 demo.ts，再沿箭头进入固定 commit 的上游源码。</text>
+</svg>

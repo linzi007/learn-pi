@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">同一个 Stream 的两种观察方式</title>
+  <desc id="desc">正常事件沿时间线依次产生，for await 实时消费每个事件，stream.result 在结束后返回完整消息。错误也通过同一事件协议结束。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="520" rx="8" fill="#f8fafc"/>
+  <path d="M8 0 H952 Q960 0 960 8 V64 H0 V8 Q0 0 8 0 Z" fill="#1d4ed8"/>
+  <text x="480" y="40" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">同一个 Stream 的两种观察方式</text>
+
+  <rect x="54" y="90" width="852" height="48" rx="8" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="480" y="120" text-anchor="middle" fill="#1e3a8a" font-size="15" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">for await...of 从左到右实时接收事件，每个 text_delta 到达时就能立刻显示</text>
+
+  <line x1="82" y1="218" x2="868" y2="218" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+    <circle cx="96" cy="218" r="14" fill="#2563eb"/>
+    <text x="96" y="178" fill="#1e3a8a" font-size="13" font-weight="700">start</text>
+    <text x="96" y="254" fill="#64748b" font-size="12">创建空消息</text>
+
+    <circle cx="220" cy="218" r="14" fill="#2563eb"/>
+    <text x="220" y="178" fill="#1e3a8a" font-size="13" font-weight="700">text_start</text>
+    <text x="220" y="254" fill="#64748b" font-size="12">文本块开始</text>
+
+    <circle cx="354" cy="218" r="16" fill="#ea580c"/>
+    <text x="354" y="166" fill="#9a3412" font-size="13" font-weight="700">text_delta #1</text>
+    <rect x="300" y="246" width="108" height="34" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="354" y="268" fill="#9a3412" font-size="13">“事件流会”</text>
+
+    <circle cx="494" cy="218" r="16" fill="#ea580c"/>
+    <text x="494" y="166" fill="#9a3412" font-size="13" font-weight="700">text_delta #2</text>
+    <rect x="440" y="246" width="108" height="34" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="494" y="268" fill="#9a3412" font-size="13">“分段到达”</text>
+
+    <circle cx="624" cy="218" r="16" fill="#ea580c"/>
+    <text x="624" y="166" fill="#9a3412" font-size="13" font-weight="700">text_delta #3</text>
+    <rect x="584" y="246" width="80" height="34" rx="6" fill="#fff7ed" stroke="#fdba74"/>
+    <text x="624" y="268" fill="#9a3412" font-size="13">“。”</text>
+
+    <circle cx="746" cy="218" r="14" fill="#2563eb"/>
+    <text x="746" y="178" fill="#1e3a8a" font-size="13" font-weight="700">text_end</text>
+    <text x="746" y="254" fill="#64748b" font-size="12">文本块结束</text>
+
+    <circle cx="852" cy="218" r="14" fill="#16a34a"/>
+    <text x="852" y="178" fill="#166534" font-size="13" font-weight="700">done</text>
+    <text x="852" y="254" fill="#64748b" font-size="12">成功结束</text>
+  </g>
+
+  <path d="M852 280 V326 H680" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="430" y="310" width="390" height="82" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+  <text x="625" y="341" text-anchor="middle" fill="#166534" font-size="15" font-weight="700" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">await stream.result()</text>
+  <text x="625" y="370" text-anchor="middle" fill="#334155" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">完整消息：“事件流会分段到达。”</text>
+
+  <rect x="54" y="418" width="852" height="78" rx="8" fill="#fff7ed" stroke="#f97316"/>
+  <text x="86" y="451" fill="#9a3412" font-size="14" font-weight="700" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">失败路径</text>
+  <text x="186" y="451" fill="#475569" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">error</text>
+  <text x="244" y="451" fill="#64748b" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">→</text>
+  <text x="278" y="451" fill="#475569" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">stream.result()</text>
+  <text x="414" y="451" fill="#64748b" font-size="14" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">仍返回</text>
+  <text x="474" y="451" fill="#b91c1c" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">AssistantMessage(stopReason="error")</text>
+  <text x="480" y="479" text-anchor="middle" fill="#64748b" font-size="12" font-family="Inter, PingFang SC, Microsoft YaHei, sans-serif">错误也通过同一个 Stream 收束，不会发起第二次请求</text>
+</svg>

@@ -1,0 +1,30 @@
+{
+	"name": "learn-pi",
+	"version": "0.1.0",
+	"private": true,
+	"description": "通过中文文档和可运行 Demo 学习 Pi Agent Harness",
+	"type": "module",
+	"license": "MIT",
+	"scripts": {
+		"lesson": "tsx scripts/run-lesson.ts",
+		"test": "vitest run",
+		"test:lesson": "vitest run",
+		"check": "biome check --error-on-warnings . && tsc --noEmit",
+		"check:lessons": "tsx scripts/check-lessons.ts",
+		"format": "biome check --write .",
+		"verify": "npm run check && npm run check:lessons && npm test"
+	},
+	"dependencies": {
+		"@earendil-works/pi-ai": "0.80.6"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.5",
+		"@types/node": "22.19.19",
+		"tsx": "4.22.1",
+		"typescript": "5.9.3",
+		"vitest": "4.1.9"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	}
+}
