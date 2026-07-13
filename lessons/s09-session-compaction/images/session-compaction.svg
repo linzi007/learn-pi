@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title description">
+  <title id="title">Pi 会话压缩的摘要条目、切点与重建上下文</title>
+  <desc id="description">会话树保留 A、B、C、D 和新增的摘要条目。切点从 C 开始保留，模型上下文是摘要、C、D。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f5f8b"/>
+    </marker>
+    <style>
+      .title { font: 700 30px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172033; }
+      .subtitle { font: 400 18px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #536273; }
+      .panel { font: 700 20px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172033; }
+      .label { font: 600 17px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #172033; }
+      .small { font: 400 15px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #415267; }
+      .arrow-label { font: 600 16px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #1f5f8b; }
+      .result { font: 700 18px 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif; fill: #14532d; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <text x="600" y="56" text-anchor="middle" class="title">会话压缩：摘要替代上下文，不删除原始树</text>
+  <text x="600" y="88" text-anchor="middle" class="subtitle">本图对应 s09：切点从 C 开始保留完整回合，摘要条目在树尾追加</text>
+
+  <rect x="46" y="140" width="390" height="454" rx="8" fill="#ffffff" stroke="#96a8bb" stroke-width="2"/>
+  <text x="241" y="180" text-anchor="middle" class="panel">完整会话树（只追加）</text>
+  <text x="241" y="207" text-anchor="middle" class="small">A、B 不删除；摘要也成为一个新条目</text>
+  <line x1="138" y1="268" x2="138" y2="548" stroke="#8ba1b7" stroke-width="2"/>
+  <line x1="138" y1="268" x2="174" y2="268" stroke="#8ba1b7" stroke-width="2"/>
+  <line x1="138" y1="338" x2="174" y2="338" stroke="#8ba1b7" stroke-width="2"/>
+  <line x1="138" y1="408" x2="174" y2="408" stroke="#8ba1b7" stroke-width="2"/>
+  <line x1="138" y1="478" x2="174" y2="478" stroke="#8ba1b7" stroke-width="2"/>
+  <line x1="138" y1="548" x2="174" y2="548" stroke="#8ba1b7" stroke-width="2"/>
+  <rect x="174" y="241" width="220" height="54" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="284" y="274" text-anchor="middle" class="label">A 旧用户消息</text>
+  <rect x="174" y="311" width="220" height="54" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="284" y="344" text-anchor="middle" class="label">B 旧助手回复</text>
+  <rect x="174" y="381" width="220" height="54" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+  <text x="284" y="414" text-anchor="middle" class="label">C 当前用户问题</text>
+  <rect x="174" y="451" width="220" height="54" rx="6" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+  <text x="284" y="484" text-anchor="middle" class="label">D 当前助手回答</text>
+  <rect x="174" y="521" width="220" height="54" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="284" y="554" text-anchor="middle" class="label">摘要（compaction）</text>
+
+  <line x1="454" y1="364" x2="566" y2="364" stroke="#1f5f8b" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="510" y="330" text-anchor="middle" class="arrow-label">findCutPoint</text>
+  <text x="510" y="353" text-anchor="middle" class="small">从末端逆向累计</text>
+
+  <rect x="581" y="236" width="234" height="260" rx="8" fill="#ffffff" stroke="#96a8bb" stroke-width="2"/>
+  <text x="698" y="276" text-anchor="middle" class="panel">切点与保留区</text>
+  <text x="698" y="304" text-anchor="middle" class="small">keepRecentTokens</text>
+  <rect x="612" y="337" width="172" height="54" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="698" y="370" text-anchor="middle" class="label">C：firstKeptEntryId</text>
+  <line x1="698" y1="400" x2="698" y2="417" stroke="#1f5f8b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="612" y="430" width="172" height="42" rx="6" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="698" y="457" text-anchor="middle" class="label">D：同一完整回合</text>
+
+  <line x1="831" y1="364" x2="944" y2="364" stroke="#1f5f8b" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="887" y="330" text-anchor="middle" class="arrow-label">buildSessionContext</text>
+  <text x="887" y="353" text-anchor="middle" class="small">按最新压缩条目重建</text>
+
+  <rect x="959" y="214" width="194" height="340" rx="8" fill="#ffffff" stroke="#96a8bb" stroke-width="2"/>
+  <text x="1056" y="254" text-anchor="middle" class="panel">当前模型上下文</text>
+  <text x="1056" y="282" text-anchor="middle" class="small">发送前才这样排列</text>
+  <rect x="985" y="321" width="142" height="52" rx="6" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="1056" y="353" text-anchor="middle" class="label">摘要</text>
+  <line x1="1056" y1="382" x2="1056" y2="399" stroke="#1f5f8b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="985" y="412" width="142" height="42" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="1056" y="439" text-anchor="middle" class="label">C</text>
+  <line x1="1056" y1="463" x2="1056" y2="478" stroke="#1f5f8b" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="985" y="489" width="142" height="42" rx="6" fill="#dcfce7" stroke="#4ade80"/>
+  <text x="1056" y="516" text-anchor="middle" class="label">D</text>
+
+  <path d="M 284 614 C 470 672, 916 672, 1056 558" fill="none" stroke="#22a06b" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text x="670" y="685" text-anchor="middle" class="result">A、B 仍在会话树中；本轮模型只从“摘要 -> C -> D”继续</text>
+</svg>
