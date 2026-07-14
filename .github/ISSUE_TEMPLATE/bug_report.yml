@@ -1,0 +1,62 @@
+name: 课程运行问题
+description: 报告安装、运行、测试或课程示例与说明不一致的问题。
+title: "[运行问题]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢反馈。请不要粘贴 API Key、token、真实会话或私人文件路径。
+  - type: input
+    id: lesson
+    attributes:
+      label: 受影响课程或文件
+      description: 例如 `s03`、`lessons/s03-tool-execution-pipeline/code.ts` 或“项目根目录”。
+      placeholder: s03
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: 复现命令
+      description: 请从干净环境开始，列出足以复现问题的最短命令。
+      placeholder: |
+        npm install --ignore-scripts
+        npm run lesson -- s03
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果
+      description: 粘贴已脱敏的报错、输出或行为描述。
+      placeholder: 实际发生了什么？
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+      description: 文档、测试或你的合理预期分别是什么？
+      placeholder: 预期应该发生什么？
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 请提供 Node.js 版本、操作系统和包管理器版本。
+      placeholder: Node.js 22.19.0, macOS 15, npm 11
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已搜索现有 Issue，确认没有重复报告。
+          required: true
+        - label: 我已移除凭据、个人信息和本机绝对路径。
+          required: true

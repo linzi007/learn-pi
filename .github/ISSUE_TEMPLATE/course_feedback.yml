@@ -1,0 +1,63 @@
+name: 课程内容纠正或改进
+description: 报告源码结论、文档表述、图片、演示或课程范围的问题。
+title: "[课程反馈]: "
+labels:
+  - course-content
+body:
+  - type: markdown
+    attributes:
+      value: |
+        课程结论以锁定的 Pi 基线为准。请说明你观察到的事实，避免只给出“这里看不懂”。
+  - type: input
+    id: lesson
+    attributes:
+      label: 受影响课程
+      description: 请填写课程编号和具体小节、图片或代码位置。
+      placeholder: s08 - 工作原理第 2 步
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 反馈类型
+      options:
+        - 源码结论不准确或已过时
+        - 文档、图片或代码之间不一致
+        - 讲解不够清楚
+        - Demo 或测试不符合课程结论
+        - 新课程或课程范围建议
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: 观察到的问题
+      description: 说明具体哪一句、哪段代码或哪张图造成了问题，以及为什么。
+      placeholder: 我在阅读或运行时观察到……
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 源码依据或复现证据
+      description: 若涉及 Pi 行为，请给出固定 commit 的源码链接、路径或最小复现；纯教学建议可写“不适用”。
+      placeholder: https://github.com/earendil-works/pi/blob/<commit>/...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议的改进
+      description: 可选。请保持“一课一个核心概念”的课程边界。
+      placeholder: 可以将……改为……
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前检查
+      options:
+        - label: 我已搜索现有 Issue，确认没有重复反馈。
+          required: true
+        - label: 我没有提交私人数据、本机绝对路径或受限上游内容。
+          required: true

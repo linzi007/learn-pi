@@ -1,5 +1,8 @@
 # Learn Pi
 
+[![验证](https://github.com/linzi007/learn-pi/actions/workflows/verify.yml/badge.svg)](https://github.com/linzi007/learn-pi/actions/workflows/verify.yml)
+[![许可证：MIT](https://img.shields.io/badge/license-MIT-0e8a16)](LICENSE)
+
 通过中文文档和可运行 `code.ts`，逐步理解 [Pi Agent Harness](https://github.com/earendil-works/pi) 的核心原理。
 
 > 本项目是非官方学习仓库，不是 Pi 的 fork、替代实现或官方文档镜像。
@@ -90,10 +93,17 @@ scripts/      统一运行与结构检查脚本
 
 第一版以 Pi [`v0.80.6`](https://github.com/earendil-works/pi/tree/2b3fda9921b5590f285165287bd442a25817f17b) 为基线。详细来源和许可证信息见 [SOURCES.md](SOURCES.md)。
 
-## 贡献与安全
+## 参与项目
+
+- 想交流学习过程、提出开放问题或讨论课程方向，请到 [Discussions](https://github.com/linzi007/learn-pi/discussions)。
+- 发现运行错误或课程内容问题，请使用 [Issue 表单](https://github.com/linzi007/learn-pi/issues/new/choose)。
+- 准备提交改动前，请阅读 [贡献指南](CONTRIBUTING.md)；提交时按 PR 模板说明验证结果和源码依据。
+
+## 开源协作
 
 - [贡献指南](CONTRIBUTING.md)
 - [安全说明](SECURITY.md)
+- [行为准则](CODE_OF_CONDUCT.md)
 - [项目协作规范](AGENTS.md)
 
 ## License

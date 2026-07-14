@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 交流、提问和课程方向讨论
+    url: https://github.com/linzi007/learn-pi/discussions
+    about: 不需要立即修改代码的问题，请到 Discussions 交流。
+  - name: 私下报告安全问题或行为问题
+    url: https://github.com/linzi007/learn-pi/security/advisories/new
+    about: 不要在公开 Issue 中暴露凭据、私人信息或敏感细节。
